@@ -19,5 +19,5 @@
 - Each detached run should persist the exact prompt, JSONL events, stderr, PID, last message, and intermediate artifacts inside its own temp workspace.
 - Run workspaces should not inherit the parent repo's global memory notes. Each detached run should see a task-specific `AGENTS.md`, create any durable memory under its own `runs/<run-id>/` directory, and stage only run-relevant files.
 - The shared run-agent instructions should live in a user-editable repo file, `run-AGENTS.md`, and the launcher should render that template into each temp workspace's `AGENTS.md`.
-- Condition B should use one persistent Codex worker session and one persistent Codex critic session; the critic must be spawned once and reused across review rounds rather than recreated each time.
+- Condition B should use one persistent Codex worker session and one persistent Codex critic session; the critic must be spawned once, reused across review rounds, and should review only the current SVG rather than PNG renders.
 - Condition C should use one persistent Codex worker session, but the external `gpt-5.4-pro` reviewer should be stateless API calls that receive the current SVG plus prior review history; do not send PNG files to that reviewer.

@@ -6,7 +6,7 @@ Before finalizing the figure, spawn exactly one critic subagent that uses the sa
 
 Keep that critic subagent alive across review rounds. Reuse the same critic session each time by sending it the revised draft and asking for another review. Do not spawn a fresh critic for each round unless the original critic session becomes unavailable.
 
-Have the critic inspect both the `SVG` and the exported `PNG` and decide whether the figure is ready for inclusion in a proposal draft.
+Have the critic inspect the current `SVG` source and decide whether the figure is ready for inclusion in a proposal draft.
 
 Ask the critic to return:
 
@@ -16,13 +16,14 @@ Ask the critic to return:
 
 Only stop when the critic explicitly says `Approved.`.
 
-If the critic says `Revise.`, update the `SVG`, re-export the `PNG`, and ask the same critic to review the revised figure again. Repeat until the critic says `Approved.`.
+If the critic says `Revise.`, update the `SVG` and ask the same critic to review the revised figure again. Repeat until the critic says `Approved.`.
 
 When interacting with the critic, preserve continuity:
 
 - keep the critic agent id and reuse it;
 - send the revised draft, the current notes, and the previous review history back into that same critic session;
 - treat each review as a continuation of the same critic conversation, not as an independent fresh judgment.
+- do not send `PNG` files to the critic; the critic should review the `SVG` only.
 
 For this run, write the final files to:
 

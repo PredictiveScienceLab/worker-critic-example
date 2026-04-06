@@ -9,7 +9,7 @@ An example of a worker-critic agentic workflow
 - `prompts/generate-master-figure-with-critic.md`: generated prompt equal to the base prompt plus the review addendum.
 - `prompts/generate-master-figure-with-external-review.md`: generated prompt equal to the base prompt plus the external-review addendum.
 
-Condition B is defined as a persistent two-session loop: one continuing worker session plus one continuing same-model critic session that is reused across review rounds rather than respawned each time.
+Condition B is defined as a persistent two-session loop: one continuing worker session plus one continuing same-model critic session that reviews the current SVG and is reused across review rounds rather than respawned each time.
 Condition C is defined as one continuing worker session plus repeated external `gpt-5.4-pro` review calls that receive the current SVG and prior review history.
 
 Regenerate the derived prompts with:

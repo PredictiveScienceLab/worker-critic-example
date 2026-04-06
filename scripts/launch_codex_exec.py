@@ -49,8 +49,8 @@ CONDITIONS = {
         prompt_path=PROMPTS_DIR / "generate-master-figure-with-critic.md",
         objective=(
             "Create a proposal-ready master figure from `inputs/project_description.tex`, "
-            "using one persistent same-model critic session that is reused across review rounds "
-            "until the critic explicitly returns `Approved.`."
+            "using one persistent same-model critic session that reviews the current SVG and is "
+            "reused across review rounds until the critic explicitly returns `Approved.`."
         ),
     ),
     "external": Condition(

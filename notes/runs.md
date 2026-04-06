@@ -14,5 +14,5 @@
 - Tightened the detached-run harness so each run gets a generated condition-specific `AGENTS.md` and run-local memory instructions under `runs/<run-id>/` instead of inheriting the repo's global notes.
 - Moved the shared detached-run agent instructions into `run-AGENTS.md` so the user can edit one file that applies to A, B, and C; the launcher now renders that template into each run workspace.
 - Switched detached runs from source-repo git worktrees to isolated temp repos under `/tmp`, with their own `.git` directories and workspace-local `uv` environments.
-- Tightened Condition B so it explicitly requires one continuous worker session and one continuous same-model critic session reused across review rounds.
+- Tightened Condition B so it explicitly requires one continuous worker session and one continuous same-model critic session reused across review rounds, with the critic reviewing only the SVG source.
 - Tightened Condition C so it explicitly requires one continuous worker session, passes prior review history into each external `gpt-5.4-pro` review call, and sends only the SVG source to the external reviewer.
