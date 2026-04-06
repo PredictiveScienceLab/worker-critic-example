@@ -21,6 +21,10 @@ VARIANTS = {
         output_path=PROMPTS_DIR / "generate-master-figure-with-critic.md",
         addendum_paths=(PROMPTS_DIR / "critic-review-addendum.md",),
     ),
+    "with_external_review": PromptVariant(
+        output_path=PROMPTS_DIR / "generate-master-figure-with-external-review.md",
+        addendum_paths=(PROMPTS_DIR / "external-review-addendum.md",),
+    ),
 }
 
 

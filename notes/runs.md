@@ -7,3 +7,4 @@
 - Copied the proposal source into the repo and converted benchmark path references to repo-relative paths.
 - Locked the benchmark to `SVG` as the internal representation and `PNG` as the evaluated export.
 - Replaced the hand-written reviewed prompt with a prompt builder in `scripts/build_prompts.py` that appends `prompts/critic-review-addendum.md` to the shared base prompt and emits `prompts/generate-master-figure-with-critic.md`.
+- Added the external-review variant by appending `prompts/external-review-addendum.md` to the same base prompt and emitting `prompts/generate-master-figure-with-external-review.md`.
