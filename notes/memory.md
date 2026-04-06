@@ -16,3 +16,5 @@
 - The external reviewer is implemented as a small CLI script that uses `OPENAI_API_KEY`, `gpt-5.4-pro`, the Responses API, the full proposal text, the SVG source, and the PNG render, and writes both raw markdown and parsed JSON review outputs.
 - Stopping rule: critique loops terminate only when the reviewer explicitly says `Approved.`.
 - Detached benchmark runs should execute in isolated git worktrees so conditions do not overwrite each other, and each run should persist the exact prompt, JSONL events, stderr, PID, last message, and intermediate artifacts.
+- For the external-review figure run, the clearest proposal-scale composition is a wide left-to-right story: imaging modalities and inverse-problem bottlenecks -> IFT engine -> outputs/validation/impact, with the four specific aims as a compact bottom band.
+- The local `inkscape` wrapper can be broken even when `command -v inkscape` succeeds; keep a fallback PNG export path such as `rsvg-convert` in repo-local tooling.

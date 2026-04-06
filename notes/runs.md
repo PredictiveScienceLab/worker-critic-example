@@ -11,3 +11,4 @@
 - Implemented `scripts/external_review.py`, a simple `gpt-5.4-pro` Responses API caller for Condition C, and documented its CLI usage in the README.
 - Locked the stopping rule across critique conditions: stop only on an explicit `Approved.` from the reviewer.
 - Added `scripts/launch_codex_exec.py` to launch detached `codex exec` runs in isolated git worktrees and persist run prompts, logs, session outputs, and intermediate artifacts.
+- In run `20260406-115110-external`, implemented `scripts/render_master_figure.py` to generate a proposal overview figure as SVG plus PNG and checkpointed multiple numbered drafts before starting external review.
