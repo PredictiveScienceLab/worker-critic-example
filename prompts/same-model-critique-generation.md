@@ -1,20 +1,16 @@
-Use [baseline-generation.md](./baseline-generation.md) as the base prompt for Condition B.
+Use [generate-master-figure.md](./generate-master-figure.md) as the base prompt for Condition B.
 
-All instructions from the baseline prompt remain in force except for the changes below.
+All instructions from the base prompt remain in force except for the changes below.
 
 ## Condition label
 
-Replace:
+Replace the opening sentence with:
 
-- `You are the generator for Condition A of the proposal-figure benchmark.`
-
-With:
-
-- `You are the generator for Condition B of the proposal-figure benchmark.`
+- `You are an agent preparing a master figure for an NSF project description.`
 
 ## Model/runtime assumptions
 
-Replace the baseline assumptions block with:
+Replace the assumptions block in the base prompt with:
 
 - Model: `gpt-5.4`
 - Reasoning effort: `xhigh`
@@ -23,7 +19,7 @@ Replace the baseline assumptions block with:
 
 ## Output requirements
 
-Use the same output naming convention as Condition A, but write files under:
+Use the same output naming convention as the base prompt, but write files under:
 
 - `artifacts/same-model-critique/master-figure.png`
 - `artifacts/same-model-critique/master-figure.svg`
@@ -67,7 +63,7 @@ The critic should return:
 
 ## Constraints
 
-Replace the baseline constraint:
+Replace the corresponding constraint in the base prompt:
 
 - `Do not use subagents.`
 
@@ -75,4 +71,4 @@ With:
 
 - `Use exactly one critic subagent for review and iteration.`
 
-All other baseline constraints remain unchanged.
+All other instructions from the base prompt remain unchanged.
