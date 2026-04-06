@@ -14,3 +14,4 @@
 - Condition-specific prompts should be generated from a shared base prompt plus additive prompt fragments so the reviewed variant preserves the base text verbatim and only appends extra instructions.
 - Condition C follows the same prompt-composition pattern as Condition B: the base generator prompt is preserved verbatim and the external-review behavior lives entirely in an additive fragment.
 - The external reviewer is implemented as a small CLI script that uses `OPENAI_API_KEY`, `gpt-5.4-pro`, the Responses API, the full proposal text, the SVG source, and the PNG render, and writes both raw markdown and parsed JSON review outputs.
+- Stopping rule: critique loops terminate only when the reviewer explicitly says `Approved.`.

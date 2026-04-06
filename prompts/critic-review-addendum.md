@@ -6,11 +6,13 @@ Have the critic inspect both the `SVG` and the exported `PNG` and decide whether
 
 Ask the critic to return:
 
-- `APPROVED` or `REVISE`;
+- `Approved.` or `Revise.`;
 - a short justification;
 - if revision is needed, a concise list of concrete changes.
 
-If the critic returns `REVISE`, update the `SVG`, re-export the `PNG`, and ask the same critic to review the revised figure again. Repeat until the critic returns `APPROVED`.
+Only stop when the critic explicitly says `Approved.`.
+
+If the critic says `Revise.`, update the `SVG`, re-export the `PNG`, and ask the same critic to review the revised figure again. Repeat until the critic says `Approved.`.
 
 For this run, write the final files to:
 

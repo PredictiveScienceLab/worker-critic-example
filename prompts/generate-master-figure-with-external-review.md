@@ -70,11 +70,13 @@ Have the external reviewer inspect both the `SVG` and the exported `PNG` and dec
 
 Ask the reviewer to return:
 
-- `APPROVED` or `REVISE`;
+- `Approved.` or `Revise.`;
 - a short justification;
 - if revision is needed, a concise list of concrete changes.
 
-If the reviewer returns `REVISE`, update the `SVG`, re-export the `PNG`, and send the revised figure to the same external reviewer again. Repeat until the reviewer returns `APPROVED`.
+Only stop when the reviewer explicitly says `Approved.`.
+
+If the reviewer says `Revise.`, update the `SVG`, re-export the `PNG`, and send the revised figure to the same external reviewer again. Repeat until the reviewer says `Approved.`.
 
 For this run, write the final files to:
 

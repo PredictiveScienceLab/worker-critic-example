@@ -9,3 +9,4 @@
 - Replaced the hand-written reviewed prompt with a prompt builder in `scripts/build_prompts.py` that appends `prompts/critic-review-addendum.md` to the shared base prompt and emits `prompts/generate-master-figure-with-critic.md`.
 - Added the external-review variant by appending `prompts/external-review-addendum.md` to the same base prompt and emitting `prompts/generate-master-figure-with-external-review.md`.
 - Implemented `scripts/external_review.py`, a simple `gpt-5.4-pro` Responses API caller for Condition C, and documented its CLI usage in the README.
+- Locked the stopping rule across critique conditions: stop only on an explicit `Approved.` from the reviewer.

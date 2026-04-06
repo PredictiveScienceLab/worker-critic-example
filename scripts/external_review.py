@@ -37,7 +37,7 @@ Evaluate it against these criteria:
 
 Return exactly this format:
 
-STATUS: APPROVED or REVISE
+STATUS: Approved. or Revise.
 JUSTIFICATION:
 <short paragraph>
 
@@ -112,7 +112,7 @@ def extract_output_text(response) -> str:
 
 
 def parse_review(text: str) -> dict[str, object]:
-    status_match = re.search(r"^\s*STATUS:\s*(APPROVED|REVISE)\s*$", text, flags=re.IGNORECASE | re.MULTILINE)
+    status_match = re.search(r"^\s*STATUS:\s*(Approved\.|Revise\.)\s*$", text, flags=re.IGNORECASE | re.MULTILINE)
     justification_match = re.search(
         r"^\s*JUSTIFICATION:\s*(.*?)^\s*CHANGES:\s*$",
         text,
@@ -120,7 +120,8 @@ def parse_review(text: str) -> dict[str, object]:
     )
     changes_match = re.search(r"^\s*CHANGES:\s*$([\s\S]*)", text, flags=re.IGNORECASE | re.MULTILINE)
 
-    status = status_match.group(1).upper() if status_match else "UNKNOWN"
+    status = status_match.group(1) if status_match else "UNKNOWN"
+    normalized_status = status.lower()
     justification = justification_match.group(1).strip() if justification_match else ""
 
     changes: list[str] = []
@@ -132,6 +133,7 @@ def parse_review(text: str) -> dict[str, object]:
 
     return {
         "status": status,
+        "approved": normalized_status == "approved.",
         "justification": justification,
         "changes": changes,
         "raw_text": text,
