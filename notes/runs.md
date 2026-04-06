@@ -12,3 +12,4 @@
 - Locked the stopping rule across critique conditions: stop only on an explicit `Approved.` from the reviewer.
 - Added `scripts/launch_codex_exec.py` to launch detached `codex exec` runs in isolated git worktrees and persist run prompts, logs, session outputs, and intermediate artifacts.
 - Tightened the detached-run harness so each run gets a sparse workspace, a generated condition-specific `AGENTS.md`, and run-local memory instructions under `runs/<run-id>/` instead of inheriting the repo's global notes.
+- Moved the shared detached-run agent instructions into `run-AGENTS.md` so the user can edit one file that applies to A, B, and C; the launcher now renders that template into each run worktree.

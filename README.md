@@ -43,11 +43,11 @@ uv run python scripts/launch_codex_exec.py external
 Each launch creates a detached git worktree under `bench_worktrees/<run-id>/`, runs `codex exec` with `gpt-5.4`, `model_reasoning_effort="xhigh"`, and `--dangerously-bypass-approvals-and-sandbox`, and saves:
 
 - the exact prompt sent to Codex;
-- a generated run-local `AGENTS.md` tailored to that condition;
+- a generated run-local `AGENTS.md` derived from `run-AGENTS.md`;
 - a JSON launch record and PID;
 - Codex JSONL event output;
 - Codex stderr;
 - the last assistant message;
 - all intermediate artifacts requested by the run-specific bookkeeping addendum.
 
-The launcher now also configures each run worktree as a sparse checkout so the agent only sees the files needed for the run instead of inheriting the parent repo's global notes. Any durable memory for the run should be created under `runs/<run-id>/` by the run itself.
+The shared template at `run-AGENTS.md` is the single file used for A, B, and C. The launcher fills in the condition-specific objective and `runs/<run-id>/` paths, then writes the rendered file to the run worktree as `AGENTS.md`. Each run worktree is also configured as a sparse checkout so the agent only sees the files needed for the run instead of inheriting the parent repo's global notes.

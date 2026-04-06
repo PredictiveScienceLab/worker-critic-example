@@ -12,6 +12,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 PROMPTS_DIR = REPO_ROOT / "prompts"
 WORKTREES_DIR = REPO_ROOT / "bench_worktrees"
+RUN_AGENTS_TEMPLATE = REPO_ROOT / "run-AGENTS.md"
 REASONING_EFFORT = "xhigh"
 MODEL = "gpt-5.4"
 SPARSE_PATTERNS = (
@@ -22,6 +23,7 @@ SPARSE_PATTERNS = (
     "/main.py",
     "/prompts/",
     "/pyproject.toml",
+    "/run-AGENTS.md",
     "/scripts/",
     "/uv.lock",
 )
@@ -108,6 +110,10 @@ def load_prompt(path: Path) -> str:
     return path.read_text(encoding="utf-8").strip()
 
 
+def load_run_agents_template() -> str:
+    return RUN_AGENTS_TEMPLATE.read_text(encoding="utf-8").strip()
+
+
 def build_run_addendum(run_id: str) -> str:
     run_root = f"runs/{run_id}"
     return f"""
@@ -133,36 +139,8 @@ Requirements:
 
 def build_run_agents(condition: Condition, run_id: str) -> str:
     run_root = f"runs/{run_id}"
-    return f"""# AGENTS.md
-
-You are an execution agent for a single detached run in this repository.
-
-## Objective
-
-{condition.objective}
-
-Use repo-relative paths and keep the run reproducible.
-
-## Memory
-
-- Do not rely on the parent project's global notes or memory files.
-- Do not edit `notes/memory.md`, `notes/runs.md`, or `notes/todo.md`.
-- If you need durable memory for this run, create it yourself under `{run_root}/`.
-- Prefer short dated notes in `{run_root}/memory.md` and `{run_root}/todo.md`.
-- Keep the chronological execution log in `{run_root}/progress.md`.
-
-## Environment
-
-- Use `uv` for Python execution and dependency management.
-- Prefer reproducible scripts over ad hoc manual edits when a script is a better fit.
-
-## Git
-
-- Commit only files required for this run.
-- Never use `git add .`, `git add -A`, or otherwise stage the entire repo.
-- Prefer explicit `git add` paths for the artifacts, run record, generated scripts, and any task-specific files you actually changed.
-- Do not stage unrelated files or parent-project notes.
-"""
+    template = load_run_agents_template()
+    return template.format(objective=condition.objective, run_root=run_root)
 
 
 def write_text(path: Path, content: str) -> None:
@@ -227,7 +205,7 @@ def main() -> None:
 
     run_agents = build_run_agents(condition, run_id)
     write_text(worktree_path / "AGENTS.md", run_agents + "\n")
-    write_text(run_root / "run-agents.md", run_agents + "\n")
+    write_text(run_root / "run-agents-used.md", run_agents + "\n")
     write_text(run_root / "prompt-source.md", prompt_source + "\n")
     write_text(run_root / "prompt-used.md", prompt_used)
 
