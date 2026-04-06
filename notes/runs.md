@@ -6,4 +6,4 @@
 - Wrote the reusable generation prompt in `prompts/generate-master-figure.md` with fixed input path, output paths, and figure contract.
 - Copied the proposal source into the repo and converted benchmark path references to repo-relative paths.
 - Locked the benchmark to `SVG` as the internal representation and `PNG` as the evaluated export.
-- Wrote the Condition B prompt in `prompts/same-model-critique-generation.md` as a controlled delta from the base generation prompt, changing only the same-model critic workflow and output location.
+- Replaced the hand-written reviewed prompt with a prompt builder in `scripts/build_prompts.py` that appends `prompts/critic-review-addendum.md` to the shared base prompt and emits `prompts/generate-master-figure-with-critic.md`.

@@ -11,3 +11,4 @@
 - Internal representation locked: every benchmark arm should use `SVG` as the editable source of truth and export the evaluated `PNG` from it.
 - Third arm updated: use an external OpenAI `Responses API` review call with `gpt-5.4-pro` rather than an in-runtime Codex subagent.
 - Production generator prompts should avoid benchmark framing, runtime hints, and proposal-specific guidance; they should read like ordinary figure-creation requests for a generic NSF proposal.
+- Condition-specific prompts should be generated from a shared base prompt plus additive prompt fragments so the reviewed variant preserves the base text verbatim and only appends extra instructions.
