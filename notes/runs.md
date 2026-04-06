@@ -1,3 +1,4 @@
 2026-04-06
 
 - Chose the post's primary demo: generate a proposal master figure from proposal LaTeX and improve it with subagent critique.
+- Grounded the demo in `/Users/ibilion/Downloads/project_description.tex` and defined three benchmark arms: no critique, same-model critique, and a stronger-critic variant if available.

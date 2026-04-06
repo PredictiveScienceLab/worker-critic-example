@@ -5,3 +5,5 @@
 - Important constraint: prefer structured outputs such as SVG, HTML/CSS, or plotting code over opaque raster images so critique can reference concrete layout/content failures and revisions are easier to inspect.
 - Selected primary use case: given the LaTeX source of a proposal, the agent must produce the proposal's master figure.
 - Evaluation focus: critique should check both semantic fidelity to the proposal text and figure quality, including hierarchy, readability, completeness, and visual clutter.
+- Proposal selected for the benchmark: `/Users/ibilion/Downloads/project_description.tex`.
+- Benchmark arms: baseline without critique, same-model critique, and optionally a stronger-critic condition if the runtime exposes a stronger callable model.
