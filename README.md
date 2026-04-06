@@ -43,17 +43,26 @@ uv run python scripts/launch_codex_exec.py critic
 uv run python scripts/launch_codex_exec.py external
 ```
 
-Each launch creates an isolated temp workspace under `/tmp/worker-critic-example-runs/<run-id>/` by seeding a minimal snapshot of this repo, initializing a fresh git repo there, and then running `codex exec` with `gpt-5.4`, `model_reasoning_effort="xhigh"`, and `--dangerously-bypass-approvals-and-sandbox`.
+Each launch creates an isolated temp workspace under `/tmp/worker-critic-example-runs/<run-id>/` by seeding a minimal snapshot of this repo, initializing a fresh git repo there, writing a run-local launch script, and then starting `codex exec` inside a named `tmux` session with `gpt-5.4`, `model_reasoning_effort="xhigh"`, and `--dangerously-bypass-approvals-and-sandbox`.
 
 Each run saves:
 
 - the exact prompt sent to Codex;
 - a generated run-local `AGENTS.md` derived from `run-AGENTS.md`;
-- a JSON launch record and PID;
+- a JSON launch record, tmux session name, and pane PID;
+- a tmux wrapper log plus Codex exit code when the run finishes;
 - Codex JSONL event output;
 - Codex stderr;
 - the last assistant message;
 - all intermediate artifacts requested by the run-specific bookkeeping addendum.
+
+To inspect or attach to a live run:
+
+```bash
+tmux list-sessions
+tmux attach -t worker-critic-<run-id>
+tmux capture-pane -pt worker-critic-<run-id>
+```
 
 The shared template at `run-AGENTS.md` is the single file used for A, B, and C. The launcher fills in the condition-specific objective and `runs/<run-id>/` paths, then writes the rendered file to the temp workspace as `AGENTS.md`.
 

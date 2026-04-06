@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import shutil
 import subprocess
 from dataclasses import dataclass
@@ -80,6 +81,11 @@ def parse_args() -> argparse.Namespace:
 def run(cmd: list[str], cwd: Path | None = None) -> str:
     completed = subprocess.run(cmd, cwd=cwd, check=True, capture_output=True, text=True)
     return completed.stdout.strip()
+
+
+def ensure_tmux_available() -> None:
+    if shutil.which("tmux") is None:
+        raise RuntimeError("tmux is required but was not found on PATH.")
 
 
 def make_run_id(condition: str, label: str) -> str:
@@ -164,50 +170,86 @@ def seed_initial_commit(workspace_path: Path) -> str:
     return run(["git", "rev-parse", "HEAD"], cwd=workspace_path)
 
 
-def launch_codex(prompt_text: str, workspace_path: Path, run_root: Path) -> int:
+def make_tmux_session_name(run_id: str) -> str:
+    return f"worker-critic-{run_id}"
+
+
+def build_tmux_launch_script(workspace_path: Path, run_root: Path) -> Path:
+    prompt_path = run_root / "prompt-used.md"
     stdout_path = run_root / "codex-events.jsonl"
     stderr_path = run_root / "codex-stderr.log"
     last_message_path = run_root / "codex-last-message.md"
+    exit_code_path = run_root / "codex-exit-code.txt"
+    wrapper_log_path = run_root / "tmux-wrapper.log"
+    finished_at_path = run_root / "codex-finished-at.txt"
+    script_path = run_root / "launch-in-tmux.sh"
 
-    stdout_handle = stdout_path.open("w", encoding="utf-8")
-    stderr_handle = stderr_path.open("w", encoding="utf-8")
+    script = f"""#!/usr/bin/env bash
+set -uo pipefail
 
-    process = subprocess.Popen(
+cd {shlex.quote(str(workspace_path))}
+
+{{
+  printf '[%s] launching codex exec\\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  codex exec \\
+    --dangerously-bypass-approvals-and-sandbox \\
+    --json \\
+    -C {shlex.quote(str(workspace_path))} \\
+    -m {shlex.quote(MODEL)} \\
+    -c {shlex.quote(f'model_reasoning_effort="{REASONING_EFFORT}"')} \\
+    -o {shlex.quote(str(last_message_path))} \\
+    - \\
+    < {shlex.quote(str(prompt_path))} \\
+    > {shlex.quote(str(stdout_path))} \\
+    2> {shlex.quote(str(stderr_path))}
+  exit_code=$?
+  printf '%s\\n' "$exit_code" > {shlex.quote(str(exit_code_path))}
+  date -u '+%Y-%m-%dT%H:%M:%SZ' > {shlex.quote(str(finished_at_path))}
+  printf '[%s] codex exited with code %s\\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$exit_code"
+  exit "$exit_code"
+}} >> {shlex.quote(str(wrapper_log_path))} 2>&1
+"""
+    write_text(script_path, script)
+    script_path.chmod(0o755)
+    return script_path
+
+
+def launch_codex_via_tmux(workspace_path: Path, run_root: Path, run_id: str) -> tuple[str, int]:
+    session_name = make_tmux_session_name(run_id)
+    script_path = build_tmux_launch_script(workspace_path, run_root)
+
+    subprocess.run(
         [
-            "codex",
-            "exec",
-            "--dangerously-bypass-approvals-and-sandbox",
-            "--json",
-            "-C",
-            str(workspace_path),
-            "-m",
-            MODEL,
+            "tmux",
+            "new-session",
+            "-d",
+            "-s",
+            session_name,
             "-c",
-            f'model_reasoning_effort="{REASONING_EFFORT}"',
-            "-o",
-            str(last_message_path),
-            "-",
+            str(workspace_path),
+            str(script_path),
         ],
-        cwd=workspace_path,
-        stdin=subprocess.PIPE,
-        stdout=stdout_handle,
-        stderr=stderr_handle,
-        text=True,
-        start_new_session=True,
-        env=os.environ.copy(),
+        check=True,
     )
 
-    assert process.stdin is not None
-    process.stdin.write(prompt_text)
-    process.stdin.close()
-
-    stdout_handle.close()
-    stderr_handle.close()
-    return process.pid
+    pane_pid = int(
+        run(
+            [
+                "tmux",
+                "list-panes",
+                "-t",
+                session_name,
+                "-F",
+                "#{pane_pid}",
+            ]
+        )
+    )
+    return session_name, pane_pid
 
 
 def main() -> None:
     args = parse_args()
+    ensure_tmux_available()
     condition = CONDITIONS[args.condition]
     run_id = make_run_id(args.condition, args.label)
     workspace_root = Path(args.workspace_root).expanduser()
@@ -226,7 +268,7 @@ def main() -> None:
     write_text(run_root / "prompt-used.md", prompt_used)
     workspace_commit = seed_initial_commit(workspace_path)
 
-    pid = launch_codex(prompt_used, workspace_path, run_root)
+    session_name, pid = launch_codex_via_tmux(workspace_path, run_root, run_id)
 
     launch_metadata = {
         "run_id": run_id,
@@ -239,6 +281,7 @@ def main() -> None:
         "workspace": str(workspace_path),
         "run_root": str(run_root),
         "pid": pid,
+        "tmux_session": session_name,
         "prompt_source": str(condition.prompt_path.relative_to(REPO_ROOT)),
         "run_agents": "AGENTS.md",
         "launched_at": datetime.now().astimezone().isoformat(),
