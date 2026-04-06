@@ -11,3 +11,5 @@
 - Implemented `scripts/external_review.py`, a simple `gpt-5.4-pro` Responses API caller for Condition C, and documented its CLI usage in the README.
 - Locked the stopping rule across critique conditions: stop only on an explicit `Approved.` from the reviewer.
 - Added `scripts/launch_codex_exec.py` to launch detached `codex exec` runs in isolated git worktrees and persist run prompts, logs, session outputs, and intermediate artifacts.
+- Created a complete benchmark artifact run under `runs/20260406-114642-base/` for proposal figure generation, including chronological progress notes, numbered intermediate drafts, numbered reviews, and a final approved figure candidate.
+- Added `scripts/render_master_figure.py` as a lightweight SVG generator for the proposal master figure so iterations remain editable and reproducible instead of relying on opaque raster editing.
