@@ -11,3 +11,4 @@
 - Implemented `scripts/external_review.py`, a simple `gpt-5.4-pro` Responses API caller for Condition C, and documented its CLI usage in the README.
 - Locked the stopping rule across critique conditions: stop only on an explicit `Approved.` from the reviewer.
 - Added `scripts/launch_codex_exec.py` to launch detached `codex exec` runs in isolated git worktrees and persist run prompts, logs, session outputs, and intermediate artifacts.
+- Tightened the detached-run harness so each run gets a sparse workspace, a generated condition-specific `AGENTS.md`, and run-local memory instructions under `runs/<run-id>/` instead of inheriting the repo's global notes.

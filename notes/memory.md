@@ -16,3 +16,4 @@
 - The external reviewer is implemented as a small CLI script that uses `OPENAI_API_KEY`, `gpt-5.4-pro`, the Responses API, the full proposal text, the SVG source, and the PNG render, and writes both raw markdown and parsed JSON review outputs.
 - Stopping rule: critique loops terminate only when the reviewer explicitly says `Approved.`.
 - Detached benchmark runs should execute in isolated git worktrees so conditions do not overwrite each other, and each run should persist the exact prompt, JSONL events, stderr, PID, last message, and intermediate artifacts.
+- Run workspaces should not inherit the parent repo's global memory notes. Each detached run should see a task-specific `AGENTS.md`, create any durable memory under its own `runs/<run-id>/` directory, and stage only run-relevant files.

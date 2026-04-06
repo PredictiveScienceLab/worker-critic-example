@@ -14,17 +14,48 @@ PROMPTS_DIR = REPO_ROOT / "prompts"
 WORKTREES_DIR = REPO_ROOT / "bench_worktrees"
 REASONING_EFFORT = "xhigh"
 MODEL = "gpt-5.4"
+SPARSE_PATTERNS = (
+    "/.gitignore",
+    "/LICENSE",
+    "/README.md",
+    "/inputs/",
+    "/main.py",
+    "/prompts/",
+    "/pyproject.toml",
+    "/scripts/",
+    "/uv.lock",
+)
 
 
 @dataclass(frozen=True)
 class Condition:
     prompt_path: Path
+    objective: str
 
 
 CONDITIONS = {
-    "base": Condition(prompt_path=PROMPTS_DIR / "generate-master-figure.md"),
-    "critic": Condition(prompt_path=PROMPTS_DIR / "generate-master-figure-with-critic.md"),
-    "external": Condition(prompt_path=PROMPTS_DIR / "generate-master-figure-with-external-review.md"),
+    "base": Condition(
+        prompt_path=PROMPTS_DIR / "generate-master-figure.md",
+        objective=(
+            "Create a proposal-ready master figure from `inputs/project_description.tex` "
+            "without using a critic subagent or an external reviewer."
+        ),
+    ),
+    "critic": Condition(
+        prompt_path=PROMPTS_DIR / "generate-master-figure-with-critic.md",
+        objective=(
+            "Create a proposal-ready master figure from `inputs/project_description.tex`, "
+            "using the same-model critic loop until the critic explicitly returns `Approved.`."
+        ),
+    ),
+    "external": Condition(
+        prompt_path=PROMPTS_DIR / "generate-master-figure-with-external-review.md",
+        objective=(
+            "Create a proposal-ready master figure from `inputs/project_description.tex`, "
+            "using the external `gpt-5.4-pro` review loop until the reviewer explicitly returns "
+            "`Approved.`."
+        ),
+    ),
 }
 
 
@@ -49,8 +80,26 @@ def make_run_id(condition: str, label: str) -> str:
 def create_worktree(worktree_path: Path) -> None:
     WORKTREES_DIR.mkdir(parents=True, exist_ok=True)
     subprocess.run(
+        ["git", "config", "extensions.worktreeConfig", "true"],
+        cwd=REPO_ROOT,
+        check=True,
+    )
+    subprocess.run(
         ["git", "worktree", "add", "--detach", str(worktree_path), "HEAD"],
         cwd=REPO_ROOT,
+        check=True,
+    )
+
+
+def configure_sparse_checkout(worktree_path: Path) -> None:
+    subprocess.run(
+        ["git", "sparse-checkout", "init", "--no-cone"],
+        cwd=worktree_path,
+        check=True,
+    )
+    subprocess.run(
+        ["git", "sparse-checkout", "set", "--no-cone", *SPARSE_PATTERNS],
+        cwd=worktree_path,
         check=True,
     )
 
@@ -74,11 +123,46 @@ In addition to the required deliverables, save all substantial intermediate resu
 Requirements:
 
 - Write a short chronological progress log to `{run_root}/progress.md`.
+- If you need durable run-local memory, create it yourself under `{run_root}/`, preferably in `{run_root}/memory.md` and `{run_root}/todo.md`.
 - Before replacing any substantial figure draft, save the prior draft in `{run_root}/intermediate/` using zero-padded filenames.
 - Save any critic or reviewer responses in `{run_root}/reviews/` using zero-padded filenames.
 - At the end, copy the final `PNG`, `SVG`, and notes file into `{run_root}/final/`.
 - Do not delete or overwrite earlier intermediate files; create new numbered files instead.
 """.strip()
+
+
+def build_run_agents(condition: Condition, run_id: str) -> str:
+    run_root = f"runs/{run_id}"
+    return f"""# AGENTS.md
+
+You are an execution agent for a single detached run in this repository.
+
+## Objective
+
+{condition.objective}
+
+Use repo-relative paths and keep the run reproducible.
+
+## Memory
+
+- Do not rely on the parent project's global notes or memory files.
+- Do not edit `notes/memory.md`, `notes/runs.md`, or `notes/todo.md`.
+- If you need durable memory for this run, create it yourself under `{run_root}/`.
+- Prefer short dated notes in `{run_root}/memory.md` and `{run_root}/todo.md`.
+- Keep the chronological execution log in `{run_root}/progress.md`.
+
+## Environment
+
+- Use `uv` for Python execution and dependency management.
+- Prefer reproducible scripts over ad hoc manual edits when a script is a better fit.
+
+## Git
+
+- Commit only files required for this run.
+- Never use `git add .`, `git add -A`, or otherwise stage the entire repo.
+- Prefer explicit `git add` paths for the artifacts, run record, generated scripts, and any task-specific files you actually changed.
+- Do not stage unrelated files or parent-project notes.
+"""
 
 
 def write_text(path: Path, content: str) -> None:
@@ -138,8 +222,12 @@ def main() -> None:
     prompt_used = prompt_source + "\n\n" + build_run_addendum(run_id) + "\n"
 
     create_worktree(worktree_path)
+    configure_sparse_checkout(worktree_path)
     run_root.mkdir(parents=True, exist_ok=True)
 
+    run_agents = build_run_agents(condition, run_id)
+    write_text(worktree_path / "AGENTS.md", run_agents + "\n")
+    write_text(run_root / "run-agents.md", run_agents + "\n")
     write_text(run_root / "prompt-source.md", prompt_source + "\n")
     write_text(run_root / "prompt-used.md", prompt_used)
 
@@ -155,6 +243,7 @@ def main() -> None:
         "run_root": str(run_root),
         "pid": pid,
         "prompt_source": str(condition.prompt_path.relative_to(REPO_ROOT)),
+        "run_agents": "AGENTS.md",
         "launched_at": datetime.now().astimezone().isoformat(),
     }
     write_text(run_root / "launch.json", json.dumps(launch_metadata, indent=2) + "\n")

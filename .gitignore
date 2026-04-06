@@ -113,6 +113,7 @@ dmypy.json
 cython_debug/
 
 # Editor and IDE artifacts
+.DS_Store
 .spyderproject
 .spyproject
 .ropeproject
