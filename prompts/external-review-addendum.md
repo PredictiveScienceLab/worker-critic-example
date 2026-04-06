@@ -1,8 +1,12 @@
 ## Review pass
 
+Maintain one continuous worker session for the entire run. Do not restart the task from scratch after each external review round.
+
 Before finalizing the figure, send the current draft to an external reviewer that uses `gpt-5.4-pro` through the OpenAI Responses API.
 
-Have the external reviewer inspect both the `SVG` and the exported `PNG` and decide whether the figure is ready for inclusion in a proposal draft.
+Have the external reviewer inspect the current `SVG` source and decide whether the figure is ready for inclusion in a proposal draft.
+
+For every external review round after the first, provide the reviewer with the previous review history so it understands what it already asked for and what changes were made in response. Treat each external review as a continuation of the same review process, not as a fresh review with no memory.
 
 Ask the reviewer to return:
 
@@ -12,7 +16,9 @@ Ask the reviewer to return:
 
 Only stop when the reviewer explicitly says `Approved.`.
 
-If the reviewer says `Revise.`, update the `SVG`, re-export the `PNG`, and send the revised figure to the same external reviewer again. Repeat until the reviewer says `Approved.`.
+If the reviewer says `Revise.`, update the `SVG`, re-export the `PNG`, and send the revised figure to the external reviewer again with the accumulated prior review history. Repeat until the reviewer says `Approved.`.
+
+Do not send `PNG` files to the external reviewer. The reviewer should receive the proposal context, the current `SVG`, and the previous review history only.
 
 For this run, write the final files to:
 

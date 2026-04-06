@@ -10,6 +10,7 @@ An example of a worker-critic agentic workflow
 - `prompts/generate-master-figure-with-external-review.md`: generated prompt equal to the base prompt plus the external-review addendum.
 
 Condition B is defined as a persistent two-session loop: one continuing worker session plus one continuing same-model critic session that is reused across review rounds rather than respawned each time.
+Condition C is defined as one continuing worker session plus repeated external `gpt-5.4-pro` review calls that receive the current SVG and prior review history.
 
 Regenerate the derived prompts with:
 
@@ -25,12 +26,12 @@ Run the external `gpt-5.4-pro` reviewer with:
 uv run python scripts/external_review.py \
   --proposal inputs/project_description.tex \
   --svg artifacts/master-figure/master-figure.svg \
-  --png artifacts/master-figure/master-figure.png \
+  --history-dir runs/<run-id>/reviews \
   --output-md artifacts/master-figure-external-review/review.md \
   --output-json artifacts/master-figure-external-review/review.json
 ```
 
-This script reads `OPENAI_API_KEY` from the environment, sends the proposal text plus the figure assets to the Responses API, and writes both the raw review and a parsed JSON summary.
+This script reads `OPENAI_API_KEY` from the environment, sends the proposal text plus the current SVG source to the Responses API, optionally includes prior markdown reviews from `--history-dir`, and writes both the raw review and a parsed JSON summary.
 
 ## Detached runs
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import json
 import os
 import re
@@ -12,16 +11,17 @@ from openai import OpenAI
 
 DEFAULT_MODEL = "gpt-5.4-pro"
 DEFAULT_REASONING_EFFORT = "xhigh"
-DEFAULT_IMAGE_DETAIL = "original"
 
 REVIEW_INSTRUCTIONS = """You are a strict reviewer for a proposal overview figure.
 
 You will receive:
 1. The LaTeX source of an NSF project description.
 2. The editable SVG source for a proposed figure.
-3. A PNG rendering of that figure.
+3. Previous review history from earlier rounds, when available.
 
 Decide whether the figure is ready for inclusion near the beginning of a proposal draft.
+
+Use the previous review history as continuity context. Do not repeat already-resolved issues unless they are still present in the current SVG. Treat this as a continuing review thread rather than a fresh review with no memory.
 
 Evaluate it against these criteria:
 - fidelity to the proposal text;
@@ -55,21 +55,25 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Review a proposal figure with gpt-5.4-pro via the Responses API.")
     parser.add_argument("--proposal", type=Path, required=True, help="Path to the proposal LaTeX source.")
     parser.add_argument("--svg", type=Path, required=True, help="Path to the editable SVG source.")
-    parser.add_argument("--png", type=Path, required=True, help="Path to the PNG render of the figure.")
     parser.add_argument("--output-md", type=Path, required=True, help="Path to write the raw markdown review.")
     parser.add_argument("--output-json", type=Path, required=True, help="Path to write the parsed JSON review.")
+    parser.add_argument(
+        "--history-dir",
+        type=Path,
+        help="Optional directory containing prior markdown reviews to include as continuity context.",
+    )
+    parser.add_argument(
+        "--history-limit",
+        type=int,
+        default=0,
+        help="If > 0, include only the most recent N prior markdown reviews from --history-dir.",
+    )
     parser.add_argument("--model", default=DEFAULT_MODEL, help="OpenAI model name.")
     parser.add_argument(
         "--reasoning-effort",
         default=DEFAULT_REASONING_EFFORT,
         choices=("medium", "high", "xhigh"),
         help="Reasoning effort for the reviewer.",
-    )
-    parser.add_argument(
-        "--image-detail",
-        default=DEFAULT_IMAGE_DETAIL,
-        choices=("low", "high", "original"),
-        help="Image detail setting for the PNG input.",
     )
     return parser.parse_args()
 
@@ -78,24 +82,53 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def encode_data_url(path: Path) -> str:
-    mime_type = "image/png"
-    payload = base64.b64encode(path.read_bytes()).decode("ascii")
-    return f"data:{mime_type};base64,{payload}"
+def load_review_history(history_dir: Path | None, *, exclude_path: Path, history_limit: int) -> list[tuple[str, str]]:
+    if history_dir is None or not history_dir.exists():
+        return []
+
+    review_paths = sorted(history_dir.glob("*-review.md"))
+    exclude_resolved = exclude_path.resolve()
+    filtered = [path for path in review_paths if path.resolve() != exclude_resolved]
+
+    if history_limit > 0:
+        filtered = filtered[-history_limit:]
+
+    return [(path.name, read_text(path).strip()) for path in filtered]
 
 
-def build_review_prompt(proposal_text: str, svg_text: str) -> str:
-    return "\n\n".join(
-        [
-            REVIEW_INSTRUCTIONS.strip(),
-            "<proposal_latex>",
-            proposal_text.strip(),
-            "</proposal_latex>",
-            "<svg_source>",
-            svg_text.strip(),
-            "</svg_source>",
-        ]
-    )
+def build_review_prompt(proposal_text: str, svg_text: str, review_history: list[tuple[str, str]]) -> str:
+    sections = [
+        REVIEW_INSTRUCTIONS.strip(),
+        "<proposal_latex>",
+        proposal_text.strip(),
+        "</proposal_latex>",
+        "<svg_source>",
+        svg_text.strip(),
+        "</svg_source>",
+    ]
+
+    if review_history:
+        history_lines = ["<previous_reviews>"]
+        for filename, review_text in review_history:
+            history_lines.extend(
+                [
+                    f"<review file=\"{filename}\">",
+                    review_text,
+                    "</review>",
+                ]
+            )
+        history_lines.append("</previous_reviews>")
+        sections.extend(history_lines)
+    else:
+        sections.extend(
+            [
+                "<previous_reviews>",
+                "None.",
+                "</previous_reviews>",
+            ]
+        )
+
+    return "\n\n".join(sections)
 
 
 def extract_output_text(response) -> str:
@@ -153,8 +186,12 @@ def main() -> None:
 
     proposal_text = read_text(args.proposal)
     svg_text = read_text(args.svg)
-    png_data_url = encode_data_url(args.png)
-    prompt_text = build_review_prompt(proposal_text, svg_text)
+    review_history = load_review_history(
+        args.history_dir,
+        exclude_path=args.output_md,
+        history_limit=args.history_limit,
+    )
+    prompt_text = build_review_prompt(proposal_text, svg_text, review_history)
 
     client = OpenAI(api_key=api_key)
     response = client.responses.create(
@@ -166,11 +203,6 @@ def main() -> None:
                 "role": "user",
                 "content": [
                     {"type": "input_text", "text": prompt_text},
-                    {
-                        "type": "input_image",
-                        "image_url": png_data_url,
-                        "detail": args.image_detail,
-                    },
                 ],
             }
         ],

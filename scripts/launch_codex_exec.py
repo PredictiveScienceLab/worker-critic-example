@@ -57,8 +57,9 @@ CONDITIONS = {
         prompt_path=PROMPTS_DIR / "generate-master-figure-with-external-review.md",
         objective=(
             "Create a proposal-ready master figure from `inputs/project_description.tex`, "
-            "using the external `gpt-5.4-pro` review loop until the reviewer explicitly returns "
-            "`Approved.`."
+            "using one persistent worker session and an external `gpt-5.4-pro` review loop that "
+            "receives the current SVG plus prior review history until the reviewer explicitly "
+            "returns `Approved.`."
         ),
     ),
 }
