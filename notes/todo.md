@@ -1,9 +1,7 @@
 2026-04-06
 
-- Define an explicit critique rubric with visual and semantic checks.
-- Decide on the rendering format for the artifact generator.
-- Collect one or two example prompts/inputs to use in the post.
-- Define the concrete input contract for proposal LaTeX handoff.
-- Decide whether the target figure should be SVG-first, TikZ-first, or generated in another structured format.
-- Confirm whether a stronger-than-`gpt-5.4` critic is actually callable in this Codex runtime.
 - Turn the benchmark spec into concrete prompts for the baseline and critique runs.
+- Design the `gpt-5.4-pro` review prompt and response schema for the external critic arm.
+- Decide what internal representation should be used to generate a reliable final `PNG`.
+- Build the simple external reviewer call that uses `OPENAI_API_KEY` and `gpt-5.4-pro`.
+- Define the iteration cap and stopping rule for the critique conditions.
