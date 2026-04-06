@@ -16,3 +16,4 @@
 - Switched detached runs from source-repo git worktrees to isolated temp repos under `/tmp`, with their own `.git` directories and workspace-local `uv` environments.
 - Tightened Condition B so it explicitly requires one continuous worker session and one continuous same-model critic session reused across review rounds, with the critic reviewing only the SVG source.
 - Tightened Condition C so it explicitly requires one continuous worker session, passes prior review history into each external `gpt-5.4-pro` review call, and sends only the SVG source to the external reviewer.
+- Upgraded the shared generation prompt to better match strong NSF master-figure conventions: conceptual schematic over plain plot, print-safe text sizing, consistent professional styling, innovation/impact emphasis, explicit clutter avoidance, and a caption draft requirement in `notes.md`.
