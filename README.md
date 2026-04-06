@@ -29,3 +29,22 @@ uv run python scripts/external_review.py \
 ```
 
 This script reads `OPENAI_API_KEY` from the environment, sends the proposal text plus the figure assets to the Responses API, and writes both the raw review and a parsed JSON summary.
+
+## Detached runs
+
+Launch an isolated background Codex run with:
+
+```bash
+uv run python scripts/launch_codex_exec.py base
+uv run python scripts/launch_codex_exec.py critic
+uv run python scripts/launch_codex_exec.py external
+```
+
+Each launch creates a detached git worktree under `bench_worktrees/<run-id>/`, runs `codex exec` with `gpt-5.4`, `model_reasoning_effort="xhigh"`, and `--dangerously-bypass-approvals-and-sandbox`, and saves:
+
+- the exact prompt sent to Codex;
+- a JSON launch record and PID;
+- Codex JSONL event output;
+- Codex stderr;
+- the last assistant message;
+- all intermediate artifacts requested by the run-specific bookkeeping addendum.
