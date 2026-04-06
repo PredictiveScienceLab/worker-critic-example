@@ -8,3 +8,11 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Local secrets and environment files
+.env
+.env.*
+*.pem
+*.key
+id_rsa
+id_ed25519
