@@ -24,12 +24,13 @@ The figure should:
 ## Artifact contract
 
 - Final deliverable format: `PNG`
+- Locked internal working representation: `SVG`
 - Intended placement: `\includegraphics[width=\textwidth]{...}` near the start of the proposal
 - Target layout: wide, shallow, readable at proposal scale
 - Target aspect ratio: about `2.1:1` to `2.2:1`
 - Suggested export size: `1950 x 900 px` at `300 dpi`, or a higher-resolution equivalent with the same aspect ratio
 - Preferred content density: one-glance overview, not a dense infographic
-- Optional working source: keep an editable source format during generation if useful, but evaluate the exported `PNG`
+- Required deliverables per run: editable `SVG`, exported `PNG`, and short notes on design choices
 
 ## What the figure must communicate
 
@@ -82,15 +83,16 @@ Hold these constant across conditions:
 - same proposal input;
 - same figure size target;
 - same output format;
+- same internal representation (`SVG`);
 - same initial generator instructions;
 - same iteration cap for critique conditions;
 - same approval rubric.
 
 ## Suggested output format
 
-Benchmark on the exported `PNG`.
+Use `SVG` as the source of truth during generation and revision.
 
-To keep iteration practical, the generator may use any internal working representation that produces a consistent final `PNG`.
+Benchmark on the exported `PNG`.
 
 ## Approval rubric for the critic
 

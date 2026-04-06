@@ -8,4 +8,5 @@
 - Proposal selected for the benchmark: `inputs/project_description.tex`.
 - Benchmark arms: baseline without critique, same-model critique, and an external stronger-critic condition using `gpt-5.4-pro`.
 - Output contract updated: final evaluated artifact is a `PNG`, sized for full proposal width and about one-third page height.
+- Internal representation locked: every benchmark arm should use `SVG` as the editable source of truth and export the evaluated `PNG` from it.
 - Third arm updated: use an external OpenAI `Responses API` review call with `gpt-5.4-pro` rather than an in-runtime Codex subagent.

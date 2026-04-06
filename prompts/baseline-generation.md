@@ -36,7 +36,8 @@ The `PNG` is the benchmarked artifact. The `SVG` is the editable working source.
 ## Figure contract
 
 - Final deliverable format: `PNG`
-- Also save an editable `SVG`
+- Locked internal working representation: `SVG`
+- Save the editable `SVG` alongside the final `PNG`
 - Target size: about `1950 x 900 px`
 - Target aspect ratio: about `2.1:1` to `2.2:1`
 - Intended placement: full text width near the start of the proposal
@@ -102,7 +103,7 @@ The figure should make it easy to understand that:
 - Do not call any external review model.
 - Do not ask for clarification.
 - Make reasonable design decisions yourself.
-- If you need an internal working representation, use one that can be exported cleanly to `PNG`.
+- Use `SVG` as the source of truth for the figure and export the benchmarked `PNG` from it.
 
 ## Quality bar
 
