@@ -4,9 +4,11 @@
 
 ## Source document
 
-- Proposal source: `/Users/ibilion/Downloads/project_description.tex`
+- Proposal source: `inputs/project_description.tex`
 - Proposal type: NSF project description
 - Existing figure reference in source: `figs/overview-with-specific-aims.pdf`
+
+All benchmark paths are relative to the repository root.
 
 ## Benchmark task
 

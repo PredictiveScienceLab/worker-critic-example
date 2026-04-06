@@ -9,9 +9,11 @@ Model/runtime assumptions:
 
 Your task is to read the NSF proposal LaTeX source at:
 
-- `/Users/ibilion/Downloads/project_description.tex`
+- `inputs/project_description.tex`
 
 and create a single master figure that summarizes the proposal at a glance.
+
+All paths below are relative to the repository root.
 
 ## Goal
 
@@ -21,9 +23,9 @@ Produce a proposal-quality overview figure for the beginning of an NSF project d
 
 Create these files:
 
-- `/Users/ibilion/Dropbox/PredictiveScienceLab/substack/subagent-improvements/artifacts/baseline/master-figure.png`
-- `/Users/ibilion/Dropbox/PredictiveScienceLab/substack/subagent-improvements/artifacts/baseline/master-figure.svg`
-- `/Users/ibilion/Dropbox/PredictiveScienceLab/substack/subagent-improvements/artifacts/baseline/notes.md`
+- `artifacts/baseline/master-figure.png`
+- `artifacts/baseline/master-figure.svg`
+- `artifacts/baseline/notes.md`
 
 The `PNG` is the benchmarked artifact. The `SVG` is the editable working source. The `notes.md` file should briefly state:
 
