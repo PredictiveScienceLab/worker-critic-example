@@ -11,3 +11,5 @@
 - Implemented `scripts/external_review.py`, a simple `gpt-5.4-pro` Responses API caller for Condition C, and documented its CLI usage in the README.
 - Locked the stopping rule across critique conditions: stop only on an explicit `Approved.` from the reviewer.
 - Added `scripts/launch_codex_exec.py` to launch detached `codex exec` runs in isolated git worktrees and persist run prompts, logs, session outputs, and intermediate artifacts.
+- Completed the same-model critic benchmark run in `runs/20260406-115107-critic/`: the figure converged after two `Revise.` rounds and one final `Approved.`.
+- The accepted design pattern was a top-row science story plus bottom-row specific aims, with aggressive simplification of secondary text to survive NSF proposal-scale reduction.

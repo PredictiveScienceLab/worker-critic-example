@@ -16,3 +16,5 @@
 - The external reviewer is implemented as a small CLI script that uses `OPENAI_API_KEY`, `gpt-5.4-pro`, the Responses API, the full proposal text, the SVG source, and the PNG render, and writes both raw markdown and parsed JSON review outputs.
 - Stopping rule: critique loops terminate only when the reviewer explicitly says `Approved.`.
 - Detached benchmark runs should execute in isolated git worktrees so conditions do not overwrite each other, and each run should persist the exact prompt, JSONL events, stderr, PID, last message, and intermediate artifacts.
+- For figure-generation runs, keep the master figure as an editable SVG driven by a small script when possible; it makes critique revisions faster and preserves a clean diff.
+- Do not parallelize dependent render steps such as `generate SVG -> export PNG -> archive draft`; running them concurrently can leave the PNG stale relative to the edited SVG.
