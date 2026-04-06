@@ -40,7 +40,9 @@ uv run python scripts/launch_codex_exec.py critic
 uv run python scripts/launch_codex_exec.py external
 ```
 
-Each launch creates a detached git worktree under `bench_worktrees/<run-id>/`, runs `codex exec` with `gpt-5.4`, `model_reasoning_effort="xhigh"`, and `--dangerously-bypass-approvals-and-sandbox`, and saves:
+Each launch creates an isolated temp workspace under `/tmp/worker-critic-example-runs/<run-id>/` by seeding a minimal snapshot of this repo, initializing a fresh git repo there, and then running `codex exec` with `gpt-5.4`, `model_reasoning_effort="xhigh"`, and `--dangerously-bypass-approvals-and-sandbox`.
+
+Each run saves:
 
 - the exact prompt sent to Codex;
 - a generated run-local `AGENTS.md` derived from `run-AGENTS.md`;
@@ -50,4 +52,17 @@ Each launch creates a detached git worktree under `bench_worktrees/<run-id>/`, r
 - the last assistant message;
 - all intermediate artifacts requested by the run-specific bookkeeping addendum.
 
-The shared template at `run-AGENTS.md` is the single file used for A, B, and C. The launcher fills in the condition-specific objective and `runs/<run-id>/` paths, then writes the rendered file to the run worktree as `AGENTS.md`. Each run worktree is also configured as a sparse checkout so the agent only sees the files needed for the run instead of inheriting the parent repo's global notes.
+The shared template at `run-AGENTS.md` is the single file used for A, B, and C. The launcher fills in the condition-specific objective and `runs/<run-id>/` paths, then writes the rendered file to the temp workspace as `AGENTS.md`.
+
+These temp workspaces are intentionally independent of the source repo:
+
+- each run gets its own `.git` directory;
+- no git worktree is attached to the source repo;
+- no parent `notes/` files are exposed to the run;
+- `uv` operates inside the temp workspace and can create its own local `.venv`.
+
+Use a different temp parent if needed:
+
+```bash
+uv run python scripts/launch_codex_exec.py base --workspace-root /tmp/my-run-root
+```
