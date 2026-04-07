@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1950" height="900" viewBox="0 0 1950 900">
+  <defs>
+    <filter id="shadow" x="-5%" y="-8%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="11" flood-color="#12324A" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="1949" height="899" rx="24" fill="#F6F8FB" stroke="#D8E2EC" stroke-width="1" />
+  <rect x="0" y="0" width="1950" height="12" rx="0" fill="#12324A" stroke="none" stroke-width="1" />
+  <circle cx="90" cy="70" r="160" fill="#DCEAF4" opacity="0.45" />
+  <circle cx="1790" cy="730" r="160" fill="#E8F3EE" opacity="0.55" />
+  <circle cx="1530" cy="45" r="120" fill="#F7E8D4" opacity="0.55" />
+
+  <text x="70" y="64" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="0"><tspan x="70" dy="0">Physics-informed Bayesian reconstruction of cardiovascular hemodynamics</tspan></text>
+  <text x="70" y="118" fill="#536B80" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="400" letter-spacing="0"><tspan x="70" dy="0">Objective: recover patient-specific flow fields and cardiac structure, with uncertainty, from multimodal cardiovascular imaging.</tspan></text>
+
+  <rect x="60" y="176" width="470" height="422" rx="26" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="84" y="198" width="138" height="34" rx="17" fill="#E8F0F7" stroke="none" stroke-width="1" /><text x="98" y="219" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0"><tspan x="98" dy="0">Inputs + challenge</tspan></text>
+  <text x="84" y="242" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="0"><tspan x="84" dy="0">Imaging is informative but</tspan><tspan x="84" dy="28">incomplete.</tspan></text>
+  
+  <rect x="84" y="302" width="420" height="88" rx="18" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="320" width="52" height="52" rx="16" fill="#E7F5F2" stroke="none" stroke-width="1" />
+  <rect x="114" y="332" width="28" height="6" rx="3" fill="#0E8F86" stroke="none" stroke-width="1" />
+  <rect x="114" y="344" width="22" height="6" rx="3" fill="#0E8F86" stroke="none" stroke-width="1" opacity="0.7" />
+  <rect x="114" y="356" width="16" height="6" rx="3" fill="#0E8F86" stroke="none" stroke-width="1" opacity="0.45" />
+  <text x="168" y="342" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="0"><tspan x="168" dy="0">PC-MRI</tspan></text>
+  <text x="168" y="364" fill="#5A7288" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="168" dy="0">noisy velocities</tspan></text>
+
+  
+  <rect x="84" y="400" width="420" height="88" rx="18" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="418" width="52" height="52" rx="16" fill="#E8F0F7" stroke="none" stroke-width="1" />
+  <rect x="114" y="430" width="28" height="6" rx="3" fill="#2F7DB6" stroke="none" stroke-width="1" />
+  <rect x="114" y="442" width="22" height="6" rx="3" fill="#2F7DB6" stroke="none" stroke-width="1" opacity="0.7" />
+  <rect x="114" y="454" width="16" height="6" rx="3" fill="#2F7DB6" stroke="none" stroke-width="1" opacity="0.45" />
+  <text x="168" y="440" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="0"><tspan x="168" dy="0">4D Flow MRI</tspan></text>
+  <text x="168" y="462" fill="#5A7288" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="168" dy="0">low-res 3D flow</tspan></text>
+
+  
+  <rect x="84" y="498" width="420" height="88" rx="18" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="102" y="516" width="52" height="52" rx="16" fill="#FBF2E2" stroke="none" stroke-width="1" />
+  <rect x="114" y="528" width="28" height="6" rx="3" fill="#C98B2D" stroke="none" stroke-width="1" />
+  <rect x="114" y="540" width="22" height="6" rx="3" fill="#C98B2D" stroke="none" stroke-width="1" opacity="0.7" />
+  <rect x="114" y="552" width="16" height="6" rx="3" fill="#C98B2D" stroke="none" stroke-width="1" opacity="0.45" />
+  <text x="168" y="538" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600" letter-spacing="0"><tspan x="168" dy="0">Color Doppler Echo</tspan></text>
+  <text x="168" y="560" fill="#5A7288" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="168" dy="0">line-of-sight flow</tspan></text>
+
+  <rect x="84" y="596" width="420" height="126" rx="20" fill="#FFF5F1" stroke="#F1D2C8" stroke-width="1" />
+  <text x="104" y="620" fill="#A44934" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="600" letter-spacing="0"><tspan x="104" dy="0">Inverse-problem bottlenecks</tspan></text>
+  <text x="104" y="648" fill="#7A564B" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" letter-spacing="0"><tspan x="104" dy="0">unknown geometry and parameters</tspan><tspan x="104" dy="22">co-registration + ill-posed inverse problem</tspan></text>
+
+  <rect x="560" y="176" width="832" height="422" rx="26" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="584" y="198" width="156" height="34" rx="17" fill="#E7F5F2" stroke="none" stroke-width="1" /><text x="598" y="219" fill="#0C5E58" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0"><tspan x="598" dy="0">Central innovation</tspan></text>
+  <text x="584" y="242" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700" letter-spacing="0"><tspan x="584" dy="0">Information Field Theory</tspan><tspan x="584" dy="38">(IFT)</tspan></text>
+  <text x="584" y="282" fill="#536B80" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="400" letter-spacing="0"><tspan x="584" dy="0">Fuse multimodal imaging with physics-based priors and scalable Bayesian inference.</tspan></text>
+  
+  <rect x="584" y="336" width="240" height="146" rx="18" fill="#EEF5FB" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="602" y="354" width="34" height="10" rx="5" fill="#2F7DB6" stroke="none" stroke-width="1" />
+  <text x="602" y="384" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="0"><tspan x="602" dy="0">Physics-informed</tspan><tspan x="602" dy="22">priors</tspan></text>
+  <text x="602" y="414" fill="#536B80" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="602" dy="0">fields +</tspan><tspan x="602" dy="22">parameters</tspan></text>
+
+  
+  <rect x="856" y="336" width="240" height="146" rx="18" fill="#EDF8F4" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="874" y="354" width="34" height="10" rx="5" fill="#0E8F86" stroke="none" stroke-width="1" />
+  <text x="874" y="384" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="0"><tspan x="874" dy="0">Measurement models</tspan></text>
+  <text x="874" y="414" fill="#536B80" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="874" dy="0">operators +</tspan><tspan x="874" dy="22">co-registration</tspan></text>
+
+  
+  <rect x="1128" y="336" width="240" height="146" rx="18" fill="#FFF5E7" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="1146" y="354" width="34" height="10" rx="5" fill="#C98B2D" stroke="none" stroke-width="1" />
+  <text x="1146" y="384" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="0"><tspan x="1146" dy="0">Joint inference</tspan></text>
+  <text x="1146" y="414" fill="#536B80" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="1146" dy="0">persistent SGLD +</tspan><tspan x="1146" dy="22">amortized VI</tspan></text>
+
+  <rect x="584" y="504" width="784" height="74" rx="20" fill="#12324A" stroke="none" stroke-width="1" filter="url(#shadow)" />
+  <text x="610" y="533" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="600" letter-spacing="0"><tspan x="610" dy="0">Novelty: joint posterior over fields + structure/parameters from multimodal</tspan><tspan x="610" dy="25">imaging, without repeated CFD solves.</tspan></text>
+  <text x="610" y="592" fill="#5A7288" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500" letter-spacing="0"><tspan x="610" dy="0">Recover flow, pressure, wall shear stress, structure, and uncertainty.</tspan></text>
+
+  <rect x="1420" y="176" width="470" height="422" rx="26" fill="#FFFFFF" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="1444" y="198" width="140" height="34" rx="17" fill="#FBF2E2" stroke="none" stroke-width="1" /><text x="1458" y="219" fill="#855F1D" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0"><tspan x="1458" dy="0">Outputs + impact</tspan></text>
+  <text x="1444" y="242" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="0"><tspan x="1444" dy="0">What the project delivers</tspan></text>
+  
+  <rect x="1444" y="292" width="190" height="144" rx="18" fill="#EEF5FB" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="1462" y="310" width="34" height="10" rx="5" fill="#2F7DB6" stroke="none" stroke-width="1" />
+  <text x="1462" y="340" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="0"><tspan x="1462" dy="0">Recovered</tspan><tspan x="1462" dy="22">quantities</tspan></text>
+  <text x="1462" y="370" fill="#536B80" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="1462" dy="0">velocity</tspan><tspan x="1462" dy="22">pressure</tspan><tspan x="1462" dy="22">wall shear stress</tspan><tspan x="1462" dy="22">structure</tspan></text>
+
+  
+  <rect x="1658" y="292" width="208" height="144" rx="18" fill="#FFF5E7" stroke="#D8E2EC" stroke-width="1" filter="url(#shadow)" />
+  <rect x="1676" y="310" width="34" height="10" rx="5" fill="#C98B2D" stroke="none" stroke-width="1" />
+  <text x="1676" y="340" fill="#12324A" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="0"><tspan x="1676" dy="0">Uncertainty</tspan></text>
+  <text x="1676" y="370" fill="#536B80" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="0"><tspan x="1676" dy="0">intervals</tspan><tspan x="1676" dy="22">model-form-error</tspan><tspan x="1676" dy="22">awareness</tspan></text>
+
+  <rect x="1444" y="458" width="422" height="226" rx="20" fill="#12324A" stroke="none" stroke-width="1" filter="url(#shadow)" />
+  <text x="1466" y="494" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="600" letter-spacing="0"><tspan x="1466" dy="0">Impact: better image analysis</tspan><tspan x="1466" dy="30">and more reliable cardiovascular</tspan><tspan x="1466" dy="30">decision support.</tspan></text>
+
+  <text x="538" y="392" fill="#2F7DB6" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="0" text-anchor="middle"><tspan x="538" dy="0">→</tspan></text>
+  <text x="1408" y="392" fill="#2F7DB6" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="0" text-anchor="middle"><tspan x="1408" dy="0">→</tspan></text>
+
+</svg>
