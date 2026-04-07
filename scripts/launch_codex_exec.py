@@ -39,6 +39,14 @@ class Condition:
 
 
 CONDITIONS = {
+    "af": Condition(
+        prompt_path=PROMPTS_DIR / "generate-master-figure-with-figma.md",
+        objective=(
+            "Create a proposal-ready master figure from `inputs/project_description.tex` "
+            "using the designated Figma file as the editable source of truth, without using a "
+            "critic subagent or an external reviewer."
+        ),
+    ),
     "base": Condition(
         prompt_path=PROMPTS_DIR / "generate-master-figure.md",
         objective=(

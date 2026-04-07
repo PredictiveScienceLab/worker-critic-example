@@ -17,6 +17,10 @@ class PromptVariant:
 BASE_PROMPT = PROMPTS_DIR / "generate-master-figure.md"
 
 VARIANTS = {
+    "with_figma": PromptVariant(
+        output_path=PROMPTS_DIR / "generate-master-figure-with-figma.md",
+        addendum_paths=(PROMPTS_DIR / "figma-addendum.md",),
+    ),
     "with_critic": PromptVariant(
         output_path=PROMPTS_DIR / "generate-master-figure-with-critic.md",
         addendum_paths=(PROMPTS_DIR / "critic-review-addendum.md",),

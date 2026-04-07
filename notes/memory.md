@@ -25,6 +25,7 @@
 - The original detached launcher is unreliable in this environment for long `codex exec` runs; move detached execution to `tmux`-managed sessions so run lifetimes are not tied to the parent process.
 - Finished benchmark runs may live only under `/tmp`, so post-run comparison artifacts should be copied back into the repo if we want stable assets for the Substack post.
 - Some archived intermediate frames can be invalid because early rasterization failures still wrote placeholder PNGs; the comparison builder should validate frames and skip broken images when assembling GIFs.
+- Added a new Codex baseline variant, `Af`, that keeps the same proposal task and no-critic setup as A but uses a designated Figma file as the editable source of truth and exports local artifacts from the Figma-built figure.
 - For the Claude version of the benchmark, explicit session orchestration is cleaner than relying on an in-session agent loop: `claude -p --resume <session-id>` preserves worker and critic continuity across review rounds.
 - Local Claude Code smoke tests on April 6, 2026 confirmed the current Azure Foundry deployment exposes `claude-opus-4-6`; the explicit Sonnet names tried (`claude-sonnet-4-6`, `claude-sonnet-4-5`, `claude-sonnet-4`) were rejected on this endpoint.
 - The Anthropic Python SDK does not automatically pick up the Foundry credentials from `ANTHROPIC_FOUNDRY_*` the way Claude Code does; the external reviewer must bind `api_key` and `base_url` explicitly.

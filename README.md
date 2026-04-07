@@ -4,8 +4,10 @@ An example of a worker-critic agentic workflow
 ## Prompt files
 
 - `prompts/generate-master-figure.md`: base prompt for figure generation.
+- `prompts/figma-addendum.md`: additive instructions for the Figma-native baseline variant.
 - `prompts/critic-review-addendum.md`: additive instructions for the reviewed variant.
 - `prompts/external-review-addendum.md`: additive instructions for the external-review variant.
+- `prompts/generate-master-figure-with-figma.md`: generated prompt equal to the base prompt plus the Figma addendum.
 - `prompts/generate-master-figure-with-critic.md`: generated prompt equal to the base prompt plus the review addendum.
 - `prompts/generate-master-figure-with-external-review.md`: generated prompt equal to the base prompt plus the external-review addendum.
 
@@ -38,12 +40,15 @@ This script reads `OPENAI_API_KEY` from the environment, sends the proposal text
 Launch an isolated background Codex run with:
 
 ```bash
+uv run python scripts/launch_codex_exec.py af
 uv run python scripts/launch_codex_exec.py base
 uv run python scripts/launch_codex_exec.py critic
 uv run python scripts/launch_codex_exec.py external
 ```
 
 Each launch creates an isolated temp workspace under `/tmp/worker-critic-example-runs/<run-id>/` by seeding a minimal snapshot of this repo, initializing a fresh git repo there, writing a run-local launch script, and then starting `codex exec` inside a named `tmux` session with `gpt-5.4`, `model_reasoning_effort="xhigh"`, and `--dangerously-bypass-approvals-and-sandbox`.
+
+`af` is the Figma-native baseline. It uses the shared base prompt plus `prompts/figma-addendum.md`, targets the configured Figma file through the MCP server, and writes local artifacts under `artifacts/master-figure-figma/` inside the temp workspace.
 
 Each run saves:
 
