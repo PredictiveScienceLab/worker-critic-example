@@ -26,6 +26,7 @@
 - Finished benchmark runs may live only under `/tmp`, so post-run comparison artifacts should be copied back into the repo if we want stable assets for the Substack post.
 - Some archived intermediate frames can be invalid because early rasterization failures still wrote placeholder PNGs; the comparison builder should validate frames and skip broken images when assembling GIFs.
 - Added a new Codex baseline variant, `Af`, that keeps the same proposal task and no-critic setup as A but uses a designated Figma file as the editable source of truth and exports local artifacts from the Figma-built figure.
+- Figma-native conditions should not hardcode a single file URL in the prompt. The launcher should inject the exact Figma URL, file key, and requested node id into each run so `Af` and later Figma review conditions can target arbitrary files reproducibly.
 - Figma MCP access can fail independently of Codex configuration because of Figma plan/tool-call limits; `Af` should preflight `use_figma` before launch and fail fast rather than silently falling back to local rendering.
 - For the Claude version of the benchmark, explicit session orchestration is cleaner than relying on an in-session agent loop: `claude -p --resume <session-id>` preserves worker and critic continuity across review rounds.
 - Local Claude Code smoke tests on April 6, 2026 confirmed the current Azure Foundry deployment exposes `claude-opus-4-6`; the explicit Sonnet names tried (`claude-sonnet-4-6`, `claude-sonnet-4-5`, `claude-sonnet-4`) were rejected on this endpoint.

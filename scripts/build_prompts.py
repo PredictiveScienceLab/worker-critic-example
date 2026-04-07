@@ -21,6 +21,13 @@ VARIANTS = {
         output_path=PROMPTS_DIR / "generate-master-figure-with-figma.md",
         addendum_paths=(PROMPTS_DIR / "figma-addendum.md",),
     ),
+    "with_figma_external_review": PromptVariant(
+        output_path=PROMPTS_DIR / "generate-master-figure-with-figma-external-review.md",
+        addendum_paths=(
+            PROMPTS_DIR / "figma-addendum.md",
+            PROMPTS_DIR / "figma-external-review-addendum.md",
+        ),
+    ),
     "with_critic": PromptVariant(
         output_path=PROMPTS_DIR / "generate-master-figure-with-critic.md",
         addendum_paths=(PROMPTS_DIR / "critic-review-addendum.md",),

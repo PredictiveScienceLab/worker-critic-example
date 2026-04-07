@@ -10,6 +10,7 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -18,7 +19,8 @@ TMP_RUNS_DIR = Path("/tmp") / "worker-critic-example-runs"
 RUN_AGENTS_TEMPLATE = REPO_ROOT / "run-AGENTS.md"
 REASONING_EFFORT = "xhigh"
 MODEL = "gpt-5.4"
-FIGMA_FILE_KEY = "dEAATgaM88OTU7As2ywPfb"
+DEFAULT_FIGMA_FILE_URL = "https://www.figma.com/design/dEAATgaM88OTU7As2ywPfb/test?node-id=0-1&m=dev&t=Bi5ZdMgqg6ozttpS-1"
+FIGMA_CONDITIONS = {"af", "cf"}
 SEED_PATHS = (
     ".python-version",
     ".gitignore",
@@ -47,6 +49,16 @@ CONDITIONS = {
             "Create a proposal-ready master figure from `inputs/project_description.tex` "
             "using the designated Figma file as the editable source of truth, without using a "
             "critic subagent or an external reviewer."
+        ),
+    ),
+    "cf": Condition(
+        prompt_path=PROMPTS_DIR / "generate-master-figure-with-figma-external-review.md",
+        objective=(
+            "Create a proposal-ready master figure from `inputs/project_description.tex` "
+            "using the designated Figma file as the editable source of truth, with one persistent "
+            "worker session and an external `gpt-5.4-pro` review loop that receives the current "
+            "exported SVG plus prior review history until the reviewer explicitly returns "
+            "`Approved.`."
         ),
     ),
     "base": Condition(
@@ -81,6 +93,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("condition", choices=sorted(CONDITIONS), help="Benchmark condition to run.")
     parser.add_argument("--label", default="", help="Optional suffix to append to the run id.")
     parser.add_argument(
+        "--figma-file-url",
+        default=DEFAULT_FIGMA_FILE_URL,
+        help="Figma design URL to target for Figma-native conditions.",
+    )
+    parser.add_argument(
         "--workspace-root",
         default=str(TMP_RUNS_DIR),
         help="Parent directory for detached temp workspaces.",
@@ -98,7 +115,22 @@ def ensure_tmux_available() -> None:
         raise RuntimeError("tmux is required but was not found on PATH.")
 
 
-def ensure_figma_preflight() -> None:
+def parse_figma_file_key(figma_file_url: str) -> str:
+    parsed = urlparse(figma_file_url)
+    parts = [part for part in parsed.path.split("/") if part]
+    if len(parts) >= 2 and parts[0] in {"design", "file"}:
+        return parts[1]
+    raise ValueError(f"Could not extract a Figma file key from URL: {figma_file_url}")
+
+
+def parse_figma_node_id(figma_file_url: str) -> str | None:
+    parsed = urlparse(figma_file_url)
+    query = parse_qs(parsed.query)
+    values = query.get("node-id")
+    return values[0] if values else None
+
+
+def ensure_figma_preflight(figma_file_key: str) -> None:
     completed = subprocess.run(
         [
             "uv",
@@ -106,7 +138,7 @@ def ensure_figma_preflight() -> None:
             "python",
             "scripts/check_figma_mcp.py",
             "--file-key",
-            FIGMA_FILE_KEY,
+            figma_file_key,
             "--model",
             MODEL,
         ],
@@ -119,7 +151,7 @@ def ensure_figma_preflight() -> None:
         return
     details = completed.stdout.strip() or completed.stderr.strip() or "Unknown Figma MCP preflight failure."
     raise RuntimeError(
-        "Figma MCP preflight failed for condition `af`. "
+        "Figma MCP preflight failed for the requested Figma condition. "
         "The current Figma account or workspace is not allowing `use_figma` calls.\n"
         f"{details}"
     )
@@ -184,10 +216,50 @@ Requirements:
 """.strip()
 
 
-def build_run_agents(condition: Condition, run_id: str) -> str:
+def build_condition_addendum(condition_key: str, figma_file_url: str | None) -> str:
+    sections: list[str] = []
+
+    if condition_key in FIGMA_CONDITIONS:
+        if not figma_file_url:
+            raise ValueError(f"Condition `{condition_key}` requires --figma-file-url.")
+        file_key = parse_figma_file_key(figma_file_url)
+        node_id = parse_figma_node_id(figma_file_url)
+        lines = [
+            "## Run-specific Figma target",
+            "",
+            "For this run, target this Figma file:",
+            "",
+            f"- `{figma_file_url}`",
+            f"- file key `{file_key}`",
+        ]
+        if node_id:
+            lines.append(f"- requested node id `{node_id}`")
+        sections.append("\n".join(lines))
+
+    return "\n\n".join(section for section in sections if section).strip()
+
+
+def build_run_agents(condition: Condition, run_id: str, *, condition_key: str, figma_file_url: str | None) -> str:
     run_root = f"runs/{run_id}"
     template = load_run_agents_template()
-    return template.format(objective=condition.objective, run_root=run_root)
+    rendered = template.format(objective=condition.objective, run_root=run_root)
+
+    if condition_key in FIGMA_CONDITIONS:
+        if not figma_file_url:
+            raise ValueError(f"Condition `{condition_key}` requires --figma-file-url.")
+        file_key = parse_figma_file_key(figma_file_url)
+        node_id = parse_figma_node_id(figma_file_url)
+        lines = [
+            "## Run-specific configuration",
+            "",
+            f"- Target Figma file: `{figma_file_url}`",
+            f"- Figma file key: `{file_key}`",
+        ]
+        if node_id:
+            lines.append(f"- Requested node id: `{node_id}`")
+        rendered = rendered + "\n\n" + "\n".join(lines)
+
+    return rendered
 
 
 def write_text(path: Path, content: str) -> None:
@@ -287,20 +359,33 @@ def launch_codex_via_tmux(workspace_path: Path, run_root: Path, run_id: str) -> 
 def main() -> None:
     args = parse_args()
     ensure_tmux_available()
-    if args.condition == "af":
-        ensure_figma_preflight()
+    figma_file_url = args.figma_file_url if args.condition in FIGMA_CONDITIONS else None
+    figma_file_key = parse_figma_file_key(figma_file_url) if figma_file_url else None
+    figma_node_id = parse_figma_node_id(figma_file_url) if figma_file_url else None
+    if args.condition in FIGMA_CONDITIONS and figma_file_key:
+        ensure_figma_preflight(figma_file_key)
     condition = CONDITIONS[args.condition]
     run_id = make_run_id(args.condition, args.label)
     workspace_root = Path(args.workspace_root).expanduser()
     workspace_path = workspace_root / run_id
     run_root = workspace_path / "runs" / run_id
     prompt_source = load_prompt(condition.prompt_path)
-    prompt_used = prompt_source + "\n\n" + build_run_addendum(run_id) + "\n"
+    condition_addendum = build_condition_addendum(args.condition, figma_file_url)
+    prompt_sections = [prompt_source]
+    if condition_addendum:
+        prompt_sections.append(condition_addendum)
+    prompt_sections.append(build_run_addendum(run_id))
+    prompt_used = "\n\n".join(prompt_sections) + "\n"
 
     create_workspace(workspace_path)
     run_root.mkdir(parents=True, exist_ok=True)
 
-    run_agents = build_run_agents(condition, run_id)
+    run_agents = build_run_agents(
+        condition,
+        run_id,
+        condition_key=args.condition,
+        figma_file_url=figma_file_url,
+    )
     write_text(workspace_path / "AGENTS.md", run_agents + "\n")
     write_text(run_root / "run-agents-used.md", run_agents + "\n")
     write_text(run_root / "prompt-source.md", prompt_source + "\n")
@@ -325,6 +410,11 @@ def main() -> None:
         "run_agents": "AGENTS.md",
         "launched_at": datetime.now().astimezone().isoformat(),
     }
+    if figma_file_url and figma_file_key:
+        launch_metadata["figma_file_url"] = figma_file_url
+        launch_metadata["figma_file_key"] = figma_file_key
+        if figma_node_id:
+            launch_metadata["figma_node_id"] = figma_node_id
     write_text(run_root / "launch.json", json.dumps(launch_metadata, indent=2) + "\n")
     write_text(run_root / "pid.txt", f"{pid}\n")
 

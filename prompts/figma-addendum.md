@@ -2,9 +2,7 @@
 
 For this condition, create the figure natively in Figma instead of drawing it as a local SVG first.
 
-Target this Figma file:
-
-- `https://www.figma.com/design/dEAATgaM88OTU7As2ywPfb/test?node-id=0-1&m=dev&t=Bi5ZdMgqg6ozttpS-1`
+Target the Figma file specified in the run-specific instructions appended to this prompt.
 
 Use the Figma MCP server to inspect the file, create the figure, and export or capture the final result.
 
