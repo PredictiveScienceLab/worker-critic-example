@@ -46,3 +46,4 @@
 - Added a parallel proposal-specific autoresearch track under `proposal_autoresearch/`, with its own `plot.py`, `prepare.py`, and `program.md`, plus proposal-specific runner and tmux launcher scripts.
 - Scored the initial proposal autoresearch baseline in `artifacts/autoresearch-proposal/current/`: average `6.50 / 10`, with the weakest criterion `readability_layout = 3.5`, confirming that the main improvement pressure is layout/crowding rather than proposal fidelity or coverage.
 - Started a one-iteration proposal smoke run as `artifacts/autoresearch-proposal/runs/proposal-smoke-1/` to validate the isolated workspace loop before launching the full 20-iteration search.
+- Launched the real 20-iteration proposal autoresearch run as `20260407-124103-proposal-autoresearch` in tmux session `autoresearch-proposal-20260407-124103-proposal-autoresearch`, with live status in `artifacts/autoresearch-proposal/runs/20260407-124103-proposal-autoresearch/status.json`.
