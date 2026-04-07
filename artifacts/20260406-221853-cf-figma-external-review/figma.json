@@ -1,0 +1,38 @@
+{
+  "figma_file_url": "https://www.figma.com/design/TxwCb1oQtqreUcRbs37U1m/test2?node-id=4-2&m=dev&t=6v0kyP3fKvQ2IQ9Y-1",
+  "file_key": "TxwCb1oQtqreUcRbs37U1m",
+  "page_id": "0:1",
+  "page_name": "Page 1",
+  "root_frame_id": "4:2",
+  "root_frame_name": "NSF Master Figure - External Review",
+  "important_child_node_ids": {
+    "inputs_panel": "4:13",
+    "center_panel": "4:41",
+    "right_panel": "4:61",
+    "novelty_banner": "4:58",
+    "impact_box": "4:83",
+    "left_to_center_arrow": "9:2",
+    "center_to_right_arrow": "9:3",
+    "center_concept_card_1": "17:2",
+    "center_concept_card_2": "17:6",
+    "posterior_outputs_box": "25:2"
+  },
+  "local_artifact_paths": {
+    "png": "artifacts/master-figure-figma-external-review/master-figure.png",
+    "svg": "artifacts/master-figure-figma-external-review/master-figure.svg",
+    "notes": "artifacts/master-figure-figma-external-review/notes.md",
+    "figma_json": "artifacts/master-figure-figma-external-review/figma.json"
+  },
+  "review_artifact_paths": {
+    "reviews_dir": "runs/20260406-221853-cf/reviews/",
+    "latest_completed_review": "runs/20260406-221853-cf/reviews/014-review.md"
+  },
+  "review_round_count": 14,
+  "review_status": "not_approved",
+  "review_blocker_summary": "The external reviewer continued to request more print-scale simplification and text enlargement; no completed round returned Approved.",
+  "run_artifacts": {
+    "progress_log": "runs/20260406-221853-cf/progress.md",
+    "intermediate_dir": "runs/20260406-221853-cf/intermediate/",
+    "final_dir": "runs/20260406-221853-cf/final/"
+  }
+}
