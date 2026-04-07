@@ -52,8 +52,19 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--run-prefix",
-        required=True,
         help="Shared run prefix, e.g. 20260406-192417.",
+    )
+    parser.add_argument(
+        "--base-run-id",
+        help="Explicit run id for the base condition, e.g. 20260406-203734-base.",
+    )
+    parser.add_argument(
+        "--critic-run-id",
+        help="Explicit run id for the critic condition, e.g. 20260406-203736-critic.",
+    )
+    parser.add_argument(
+        "--external-run-id",
+        help="Explicit run id for the external condition, e.g. 20260406-203736-external.",
     )
     parser.add_argument(
         "--runs-parent",
@@ -79,7 +90,14 @@ def parse_args() -> argparse.Namespace:
         default=1100,
         help="Width of each frame in the progress GIFs.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    has_prefix = bool(args.run_prefix)
+    has_explicit = any((args.base_run_id, args.critic_run_id, args.external_run_id))
+    if has_prefix == has_explicit:
+        parser.error("Provide either --run-prefix or all of --base-run-id, --critic-run-id, and --external-run-id.")
+    if has_explicit and not all((args.base_run_id, args.critic_run_id, args.external_run_id)):
+        parser.error("When using explicit run ids, provide --base-run-id, --critic-run-id, and --external-run-id together.")
+    return args
 
 
 def run_command(args: list[str]) -> None:
@@ -96,16 +114,25 @@ def is_valid_image(path: Path) -> bool:
     return result.returncode == 0
 
 
-def resolve_run_root(runs_parent: Path, run_prefix: str, slug: str) -> Path:
-    run_root = runs_parent / f"{run_prefix}-{slug}"
+def resolve_run_root(runs_parent: Path, run_id: str) -> Path:
+    run_root = runs_parent / run_id
     if not run_root.exists():
         raise FileNotFoundError(f"Run root not found: {run_root}")
     return run_root
 
 
-def run_records_dir(run_root: Path, run_prefix: str, slug: str) -> Path:
-    run_id = f"{run_prefix}-{slug}"
+def run_records_dir(run_root: Path, run_id: str) -> Path:
     return run_root / "runs" / run_id
+
+
+def resolve_run_ids(args: argparse.Namespace) -> dict[str, str]:
+    if args.run_prefix:
+        return {spec.slug: f"{args.run_prefix}-{spec.slug}" for spec in SPECS}
+    return {
+        "base": args.base_run_id,
+        "critic": args.critic_run_id,
+        "external": args.external_run_id,
+    }
 
 
 def copy_if_exists(source: Path, destination: Path) -> None:
@@ -237,6 +264,8 @@ def write_summary(summary_path: Path, lines: list[str]) -> None:
 
 def main() -> None:
     args = parse_args()
+    run_ids = resolve_run_ids(args)
+    label = args.run_prefix or f"{args.base_run_id}__{args.critic_run_id}__{args.external_run_id}"
 
     output_dir = args.output_dir
     copied_dir = output_dir / "finals"
@@ -248,7 +277,7 @@ def main() -> None:
     gifs_dir.mkdir(parents=True, exist_ok=True)
 
     summary_lines = [
-        f"# Comparison Artifacts for {args.run_prefix}",
+        f"# Comparison Artifacts for {label}",
         "",
         f"Runs parent: `{args.runs_parent}`",
         "",
@@ -263,8 +292,9 @@ def main() -> None:
     with TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
         for spec in SPECS:
-            run_root = resolve_run_root(args.runs_parent, args.run_prefix, spec.slug)
-            run_records = run_records_dir(run_root, args.run_prefix, spec.slug)
+            run_id = run_ids[spec.slug]
+            run_root = resolve_run_root(args.runs_parent, run_id)
+            run_records = run_records_dir(run_root, run_id)
             final_png = run_root / spec.final_png_rel
             notes_path = run_root / spec.notes_rel
             intermediate_dir = run_records / "intermediate"
@@ -307,6 +337,7 @@ def main() -> None:
             summary_lines.extend(
                 [
                     f"## {spec.title}",
+                    f"- Run id: `{run_id}`",
                     f"- Run root: `{run_root}`",
                     f"- Final PNG source: `{final_png}`",
                     f"- Notes source: `{notes_path}`",
