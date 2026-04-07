@@ -31,3 +31,6 @@
 - For the Claude version of the benchmark, explicit session orchestration is cleaner than relying on an in-session agent loop: `claude -p --resume <session-id>` preserves worker and critic continuity across review rounds.
 - Local Claude Code smoke tests on April 6, 2026 confirmed the current Azure Foundry deployment exposes `claude-opus-4-6`; the explicit Sonnet names tried (`claude-sonnet-4-6`, `claude-sonnet-4-5`, `claude-sonnet-4`) were rejected on this endpoint.
 - The Anthropic Python SDK does not automatically pick up the Foundry credentials from `ANTHROPIC_FOUNDRY_*` the way Claude Code does; the external reviewer must bind `api_key` and `base_url` explicitly.
+- The autoresearch setup for the worker-critic figure now uses `plot.py` as the only editable generator file and `prepare.py` as a fixed evaluator that asks a Codex reviewer to score four criteria objectively, computes the average in code, and writes machine-readable review outputs.
+- A practical acceptance rule for the outer autoresearch controller is: accept a candidate if it raises the average score, or if the average ties and the weakest criterion improves.
+- For long autoresearch loops, stream the writer `codex exec` JSON output directly to per-iteration log files instead of buffering it in memory; that keeps status inspectable while an iteration is running.

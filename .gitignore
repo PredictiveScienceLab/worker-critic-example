@@ -129,3 +129,6 @@ __marimo__/
 
 # Detached benchmark workspaces and outputs
 bench_worktrees/
+
+# Autoresearch run logs and per-iteration work products
+artifacts/autoresearch/runs/

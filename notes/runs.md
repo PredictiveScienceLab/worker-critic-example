@@ -33,3 +33,13 @@
 - Extended `scripts/build_comparison_artifacts.py` so it can assemble comparisons either from a shared run prefix or from explicit per-condition run ids; used that to save the Claude comparison package under `artifacts/20260406-203736-claude-comparison/`.
 - Created a Figma-native Substack explainer figure for the worker-critic pattern in `BbJEwnEAJaJoM8clkchS39` on `Page 1` as frame `9:2` (`Worker-Critic Pattern`), showing inputs, persistent worker and critic sessions, iterative drafts, and the approved output in a single publication-style composition.
 - Exported a high-resolution PNG from Figma file `dEAATgaM88OTU7As2ywPfb`, node `19:2`, and saved it locally at `artifacts/figma-exports/test-node-19-2@2x.png` (`3900 x 1800`).
+
+2026-04-07
+
+- Tagged the repo state before the autoresearch work as `pre-autoresearch-setup-20260407`.
+- Added an autoresearch-style figure generator/evaluator pair at the repo root: `plot.py` renders the worker-critic explainer figure, while `prepare.py` asks a Codex reviewer to score `semantic_fidelity`, `one_glance_clarity`, `readability_layout`, and `visual_coherence`, then computes the average score in code and writes `review.json` plus `review.md`.
+- Added `program.md` to constrain the writer loop to `plot.py` edits only and to make the score-improvement objective explicit.
+- Added `scripts/run_autoresearch.py`, which seeds isolated temp git repos per iteration, runs one Codex writer pass, evaluates the candidate with `prepare.py`, archives each iteration, and keeps only score-improving candidates under `artifacts/autoresearch/runs/<run-id>/best/`.
+- Added `scripts/launch_autoresearch.py`, a tmux-backed launcher for long autoresearch runs that writes `launch.json`, captures runner stdout/stderr, and keeps the loop alive outside the current session.
+- Ran a one-iteration smoke test (`smoke-1`) and verified the closed-loop setup end to end. The best candidate simplified the figure into one dominant worker -> draft -> critic -> approval flow and improved the average score from `6.67` to `7.28` inside the isolated run.
+- Promoted the smoke-test winner into the repo baseline and rescored it locally in the repo. The current baseline in `artifacts/autoresearch/current/` now scores `7.88 / 10`, with `semantic_fidelity 8.5`, `one_glance_clarity 7.0`, `readability_layout 8.0`, and `visual_coherence 8.0`.
