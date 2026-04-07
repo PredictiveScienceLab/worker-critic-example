@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1020" viewBox="0 0 1800 1020">
+<rect x="0" y="0" width="1800" height="1020" rx="24" ry="24" fill="#F5F1E8" fill-opacity="1.0" />
+<circle cx="1660" cy="120" r="220" fill="rgba(201, 217, 235, 0.360)" fill-opacity="1.0" />
+<circle cx="110" cy="880" r="170" fill="rgba(244, 210, 140, 0.260)" fill-opacity="1.0" />
+<circle cx="860" cy="930" r="110" fill="rgba(199, 181, 243, 0.160)" fill-opacity="1.0" />
+<path d="M 58 118 C 450 76, 1010 150, 1734 74" fill="none" fill-opacity="0.7" stroke="#DDE5EC" stroke-opacity="0.7" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+<text x="58" y="74" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="820" fill="#243B53" text-anchor="start"><tspan x="58" dy="0">Multimodal Bayesian Reconstruction of Cardiovascular</tspan><tspan x="58" dy="58">Hemodynamics</tspan></text>
+<rect x="224" y="94" width="1330" height="48" rx="24.0" ry="24.0" fill="#E9EFF4" fill-opacity="1.0" stroke="#D7E0E8" stroke-width="1" />
+<text x="889.0" y="123.0" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#243B53" text-anchor="middle">Goal: recover patient-specific geometry, flow, and pressure from noisy multimodal imaging, with quantified uncertainty.</text>
+<rect x="44" y="160" width="1720" height="742" rx="34" ry="34" fill="#FFFCF8" fill-opacity="1.0" stroke="#E8DED1" stroke-width="1" />
+<rect x="62" y="206" width="382" height="550" rx="30" ry="30" fill="#FFFFFF" fill-opacity="1.0" stroke="#DDE5EC" stroke-width="1" />
+<text x="88" y="250" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="820" fill="#243B53" text-anchor="start">Clinical problem + data</text>
+<text x="88" y="294" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" fill="#5C6E7E" text-anchor="start"><tspan x="88" dy="0">Clinically important flow is</tspan><tspan x="88" dy="24">observed only indirectly and no</tspan><tspan x="88" dy="24">single modality resolves</tspan><tspan x="88" dy="24">geometry, pressure, and</tspan><tspan x="88" dy="24">uncertainty.</tspan></text>
+<rect x="88" y="332" width="328" height="104" rx="26" ry="26" fill="#FFFFFF" fill-opacity="1.0" stroke="#5B8FD1" stroke-width="2" />
+<circle cx="136" cy="374" r="24" fill="rgba(91, 143, 209, 0.140)" fill-opacity="1.0" stroke="rgba(91, 143, 209, 0.450)" stroke-width="2" />
+<circle cx="136" cy="374" r="14" fill="#FFFFFF" fill-opacity="1.0" stroke="rgba(91, 143, 209, 0.650)" stroke-width="2" />
+<text x="136" y="381" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#5B8FD1" text-anchor="middle">⊂</text>
+<text x="180" y="374" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800" fill="#243B53" text-anchor="start">PC-MRI</text>
+<text x="180" y="410" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" fill="#52667A" text-anchor="start"><tspan x="180" dy="0">phase-contrast</tspan><tspan x="180" dy="24">velocity</tspan></text>
+<rect x="88" y="460" width="328" height="104" rx="26" ry="26" fill="#FFFFFF" fill-opacity="1.0" stroke="#6AA176" stroke-width="2" />
+<circle cx="136" cy="502" r="24" fill="rgba(106, 161, 118, 0.140)" fill-opacity="1.0" stroke="rgba(106, 161, 118, 0.450)" stroke-width="2" />
+<circle cx="136" cy="502" r="14" fill="#FFFFFF" fill-opacity="1.0" stroke="rgba(106, 161, 118, 0.650)" stroke-width="2" />
+<text x="136" y="509" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#6AA176" text-anchor="middle">✳</text>
+<text x="180" y="502" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800" fill="#243B53" text-anchor="start">4D Flow MRI</text>
+<text x="180" y="538" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" fill="#52667A" text-anchor="start"><tspan x="180" dy="0">3D + time, but</tspan><tspan x="180" dy="24">spatial averaging</tspan></text>
+<rect x="88" y="588" width="328" height="104" rx="26" ry="26" fill="#FFFFFF" fill-opacity="1.0" stroke="#D47A66" stroke-width="2" />
+<circle cx="136" cy="630" r="24" fill="rgba(212, 122, 102, 0.140)" fill-opacity="1.0" stroke="rgba(212, 122, 102, 0.450)" stroke-width="2" />
+<circle cx="136" cy="630" r="14" fill="#FFFFFF" fill-opacity="1.0" stroke="rgba(212, 122, 102, 0.650)" stroke-width="2" />
+<text x="136" y="637" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#D47A66" text-anchor="middle">≋</text>
+<text x="180" y="630" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800" fill="#243B53" text-anchor="start">Color Doppler Echo</text>
+<text x="180" y="666" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" fill="#52667A" text-anchor="start"><tspan x="180" dy="0">fast, low cost,</tspan><tspan x="180" dy="24">line-of-sight</tspan><tspan x="180" dy="24">velocity</tspan></text>
+<rect x="88" y="714" width="328" height="122" rx="24" ry="24" fill="#FFF5F1" fill-opacity="1.0" stroke="#E3B7AA" stroke-width="2" />
+<text x="106" y="752" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="820" fill="#C76652" text-anchor="start">Why the inverse problem is hard</text>
+<text x="106" y="790" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#6A4A42" text-anchor="start"><tspan x="106" dy="0">Noise, spatial averaging,</tspan><tspan x="106" dy="22">unknown geometry, boundary /</tspan><tspan x="106" dy="22">initial conditions, and</tspan><tspan x="106" dy="22">modality misalignment make the</tspan><tspan x="106" dy="22">inverse problem ill-posed.</tspan></text>
+<rect x="470" y="186" width="880" height="612" rx="30" ry="30" fill="#FFFDF9" fill-opacity="1.0" stroke="#E8D7B5" stroke-width="2" />
+<text x="500" y="250" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="820" fill="#243B53" text-anchor="start">New engine: Information Field Theory (IFT)</text>
+<rect x="1044" y="214" width="268" height="40" rx="20.0" ry="20.0" fill="#FFF3DE" fill-opacity="1.0" stroke="#E8C17E" stroke-width="1" />
+<text x="1178.0" y="239.0" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#C88820" text-anchor="middle">NEW: no repeated CFD solves</text>
+<text x="500" y="292" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" fill="#5C6E7E" text-anchor="start"><tspan x="500" dy="0">IFT combines measurement models and PDE-informed priors into one Bayesian</tspan><tspan x="500" dy="24">reconstruction over fields, parameters, and uncertainty.</tspan></text>
+<text x="500" y="332" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="820" fill="#C88820" text-anchor="start">Posterior Hamiltonian = data Hamiltonian + prior Hamiltonian</text>
+<rect x="500" y="366" width="252" height="138" rx="22" ry="22" fill="#F5FAFF" fill-opacity="1.0" stroke="#5B8FD1" stroke-width="2" />
+<rect x="518" y="384" width="8" height="102" rx="4" ry="4" fill="#5B8FD1" fill-opacity="1.0" />
+<text x="544" y="404" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="800" fill="#243B53" text-anchor="start">Physics-informed priors</text>
+<text x="544" y="440" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start">Eikonal geometry</text>
+<text x="544" y="472" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start"><tspan x="544" dy="0">Continuity +</tspan><tspan x="544" dy="22">Navier-Stokes</tspan></text>
+<text x="544" y="504" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start"><tspan x="544" dy="0">beta for model-form</tspan><tspan x="544" dy="22">error</tspan></text>
+<rect x="774" y="366" width="252" height="138" rx="22" ry="22" fill="#F2FBFA" fill-opacity="1.0" stroke="#4D9AA7" stroke-width="2" />
+<rect x="792" y="384" width="8" height="102" rx="4" ry="4" fill="#4D9AA7" fill-opacity="1.0" />
+<text x="818" y="404" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="800" fill="#243B53" text-anchor="start">Measurement models</text>
+<text x="818" y="440" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start"><tspan x="818" dy="0">PC-MRI, 4D Flow,</tspan><tspan x="818" dy="22">Echo</tspan></text>
+<text x="818" y="472" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start"><tspan x="818" dy="0">modality-specific</tspan><tspan x="818" dy="22">operators</tspan></text>
+<text x="818" y="504" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start"><tspan x="818" dy="0">Bayesian co-</tspan><tspan x="818" dy="22">registration</tspan></text>
+<rect x="1048" y="366" width="252" height="138" rx="22" ry="22" fill="#FFF8EE" fill-opacity="1.0" stroke="#D59A39" stroke-width="2" />
+<rect x="1066" y="384" width="8" height="102" rx="4" ry="4" fill="#D59A39" fill-opacity="1.0" />
+<text x="1092" y="404" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="800" fill="#243B53" text-anchor="start">Scalable inference</text>
+<text x="1092" y="440" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start">persistent SGLD</text>
+<text x="1092" y="472" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start">amortized VI</text>
+<text x="1092" y="504" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#425466" text-anchor="start"><tspan x="1092" dy="0">data-parallel GPU</tspan><tspan x="1092" dy="22">batches</tspan></text>
+<rect x="500" y="526" width="800" height="148" rx="28" ry="28" fill="#F7FBFD" fill-opacity="1.0" stroke="#D9E6E8" stroke-width="1" />
+<path d="M 560 608.88 C 720 546, 920 664, 1120 608.88 S 1080 550, 1180 608.88" fill="none" fill-opacity="0.9" stroke="#BFD9E9" stroke-opacity="0.9" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M 564 602.88 C 724 552, 928 656, 1124 602.88 S 1084 556, 1182 602.88" fill="none" fill-opacity="1.0" stroke="#2A8F9C" stroke-opacity="1.0" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M 582 626.88 C 732 590, 924 684, 1118 626.88 S 1100 580, 1188 626.88" fill="none" fill-opacity="1.0" stroke="#CC8A26" stroke-opacity="1.0" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+<circle cx="710" cy="604.88" r="14" fill="#FFFFFF" fill-opacity="1.0" stroke="#5B8FD1" stroke-width="3" />
+<circle cx="870" cy="604.88" r="14" fill="#FFFFFF" fill-opacity="1.0" stroke="#5B8FD1" stroke-width="3" />
+<circle cx="1070" cy="604.88" r="14" fill="#FFFFFF" fill-opacity="1.0" stroke="#5B8FD1" stroke-width="3" />
+<path d="M 1000 690 C 1060 590, 1120 774, 1184 674" fill="none" fill-opacity="0.9" stroke="#2D67A3" stroke-opacity="0.9" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M 964 680 C 1024 582, 1084 762, 1150 664" fill="none" fill-opacity="0.6" stroke="#7BA8D6" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<rect x="1132" y="528" width="132" height="30" rx="15.0" ry="15.0" fill="#EEF2F8" fill-opacity="1.0" stroke="#D7E0E8" stroke-width="1" />
+<text x="1198.0" y="548.0" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#243B53" text-anchor="middle">posterior output</text>
+<rect x="1090" y="590" width="130" height="30" rx="15.0" ry="15.0" fill="#EAF4E9" fill-opacity="1.0" stroke="#B9D7BB" stroke-width="1" />
+<text x="1155.0" y="610.0" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#5E8A67" text-anchor="middle">ill-posed problems</text>
+<rect x="1078" y="632" width="150" height="30" rx="15.0" ry="15.0" fill="#F2E9FF" fill-opacity="1.0" stroke="#D9C6F6" stroke-width="1" />
+<text x="1153.0" y="652.0" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#7E48B3" text-anchor="middle">uncertainty-aware</text>
+<text x="1246" y="576" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="400" fill="#5C6E7E" text-anchor="start">geometry g(x,t), velocity v(x,t),</text>
+<text x="1246" y="602" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="400" fill="#5C6E7E" text-anchor="start">pressure p(x,t), motion, uncertainty</text>
+<rect x="500" y="708" width="186" height="120" rx="24" ry="24" fill="#F4F9FF" fill-opacity="1.0" stroke="#4F8BD0" stroke-width="2" />
+<circle cx="534" cy="742" r="20" fill="#4F8BD0" fill-opacity="1.0" />
+<text x="534" y="750" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF" text-anchor="middle">1</text>
+<text x="566" y="742" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="800" fill="#4F8BD0" text-anchor="start">AIM 1</text>
+<text x="528" y="782" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#4B5D6E" text-anchor="start"><tspan x="528" dy="0">Priors,</tspan><tspan x="528" dy="22">measurement</tspan><tspan x="528" dy="22">operators, and</tspan><tspan x="528" dy="22">co-</tspan><tspan x="528" dy="22">registration.</tspan></text>
+<rect x="700" y="708" width="186" height="120" rx="24" ry="24" fill="#F2FBFA" fill-opacity="1.0" stroke="#4D9AA7" stroke-width="2" />
+<circle cx="734" cy="742" r="20" fill="#4D9AA7" fill-opacity="1.0" />
+<text x="734" y="750" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="766" y="742" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="800" fill="#4D9AA7" text-anchor="start">AIM 2</text>
+<text x="728" y="782" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#4B5D6E" text-anchor="start"><tspan x="728" dy="0">Boundary-aware</tspan><tspan x="728" dy="22">fields plus</tspan><tspan x="728" dy="22">causal /</tspan><tspan x="728" dy="22">Markovian</tspan><tspan x="728" dy="22">dynamics.</tspan></text>
+<rect x="900" y="708" width="186" height="120" rx="24" ry="24" fill="#FFF8EE" fill-opacity="1.0" stroke="#D59A39" stroke-width="2" />
+<circle cx="934" cy="742" r="20" fill="#D59A39" fill-opacity="1.0" />
+<text x="934" y="750" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF" text-anchor="middle">3</text>
+<text x="966" y="742" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="800" fill="#D59A39" text-anchor="start">AIM 3</text>
+<text x="928" y="782" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#4B5D6E" text-anchor="start"><tspan x="928" dy="0">Persistent</tspan><tspan x="928" dy="22">SGLD +</tspan><tspan x="928" dy="22">amortized VI</tspan><tspan x="928" dy="22">for scalable</tspan><tspan x="928" dy="22">joint</tspan><tspan x="928" dy="22">inference.</tspan></text>
+<rect x="1100" y="708" width="200" height="120" rx="24" ry="24" fill="#F3FAF2" fill-opacity="1.0" stroke="#6F9A70" stroke-width="2" />
+<circle cx="1134" cy="742" r="20" fill="#6F9A70" fill-opacity="1.0" />
+<text x="1134" y="750" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#FFFFFF" text-anchor="middle">4</text>
+<text x="1166" y="742" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="800" fill="#6F9A70" text-anchor="start">AIM 4</text>
+<text x="1128" y="782" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#4B5D6E" text-anchor="start"><tspan x="1128" dy="0">Synthetic</tspan><tspan x="1128" dy="22">verification, in</tspan><tspan x="1128" dy="22">vitro</tspan><tspan x="1128" dy="22">validation, and</tspan><tspan x="1128" dy="22">clinical</tspan><tspan x="1128" dy="22">demonstration.</tspan></text>
+<rect x="1380" y="206" width="336" height="550" rx="30" ry="30" fill="#FFFFFF" fill-opacity="1.0" stroke="#DDE5EC" stroke-width="1" />
+<text x="1406" y="250" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="820" fill="#243B53" text-anchor="start">Validation path + impact</text>
+<text x="1406" y="294" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="400" fill="#5C6E7E" text-anchor="start"><tspan x="1406" dy="0">Synthetic truth -&gt; phantoms</tspan><tspan x="1406" dy="24">-&gt; clinical cohorts.</tspan></text>
+<rect x="1408" y="334" width="280" height="86" rx="22" ry="22" fill="#F4F8FC" fill-opacity="1.0" stroke="#D7E0E8" stroke-width="2" />
+<text x="1432" y="370" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="820" fill="#243B53" text-anchor="start">Decision-relevant outputs</text>
+<text x="1432" y="402" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#5C6E7E" text-anchor="start">velocity / pressure fields,</text>
+<text x="1432" y="424" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#5C6E7E" text-anchor="start">confidence bounds, image analysis</text>
+<rect x="1412" y="446" width="272" height="104" rx="22" ry="22" fill="#FFFFFF" fill-opacity="1.0" stroke="#5B8FD1" stroke-width="2" />
+<text x="1442" y="490" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800" fill="#5B8FD1" text-anchor="middle">✓</text>
+<text x="1470" y="484" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#5B8FD1" text-anchor="start">Verification</text>
+<text x="1470" y="518" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#4B5D6E" text-anchor="start"><tspan x="1470" dy="0">Synthetic 4D Flow +</tspan><tspan x="1470" dy="23">Echo against known</tspan><tspan x="1470" dy="23">truth</tspan></text>
+<rect x="1412" y="572" width="272" height="104" rx="22" ry="22" fill="#FFFFFF" fill-opacity="1.0" stroke="#6AA176" stroke-width="2" />
+<text x="1442" y="616" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800" fill="#6AA176" text-anchor="middle">∿</text>
+<text x="1470" y="610" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#6AA176" text-anchor="start">Validation</text>
+<text x="1470" y="644" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#4B5D6E" text-anchor="start"><tspan x="1470" dy="0">MRI / Echo phantoms</tspan><tspan x="1470" dy="23">benchmarked with</tspan><tspan x="1470" dy="23">PIV/PTV</tspan></text>
+<rect x="1412" y="698" width="272" height="104" rx="22" ry="22" fill="#FFFFFF" fill-opacity="1.0" stroke="#D47A66" stroke-width="2" />
+<text x="1442" y="742" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800" fill="#D47A66" text-anchor="middle">+</text>
+<text x="1470" y="736" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#D47A66" text-anchor="start">Demonstration</text>
+<text x="1470" y="770" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="400" fill="#4B5D6E" text-anchor="start"><tspan x="1470" dy="0">Clinical cohorts</tspan><tspan x="1470" dy="23">for risk and model</tspan><tspan x="1470" dy="23">comparison</tspan></text>
+<line x1="1548" y1="550" x2="1548" y2="570" stroke="#4D9AA7" stroke-opacity="1.0" stroke-width="8" stroke-linecap="round" />
+<polygon points="1548,570 1561.0,550.0 1535.0,550.0" fill="#4D9AA7" fill-opacity="1.0" />
+<line x1="1548" y1="676" x2="1548" y2="696" stroke="#4D9AA7" stroke-opacity="1.0" stroke-width="8" stroke-linecap="round" />
+<polygon points="1548,696 1561.0,676.0 1535.0,676.0" fill="#4D9AA7" fill-opacity="1.0" />
+<rect x="1408" y="824" width="280" height="76" rx="22" ry="22" fill="#FFF7E8" fill-opacity="1.0" stroke="#E8C17E" stroke-width="2" />
+<text x="1432" y="856" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="820" fill="#C88820" text-anchor="start">Intended impact</text>
+<text x="1432" y="884" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="400" fill="#6A5A41" text-anchor="start"><tspan x="1432" dy="0">More reliable cardiovascular</tspan><tspan x="1432" dy="20">image interpretation</tspan></text>
+<line x1="420" y1="534" x2="470" y2="534" stroke="#C5DCE8" stroke-opacity="1.0" stroke-width="10" stroke-linecap="round" />
+<polygon points="470,534 445.0,517.75 445.0,550.25" fill="#C5DCE8" fill-opacity="1.0" />
+<text x="444" y="508" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#2A8F9C" text-anchor="middle">co-register
++ fuse</text>
+<rect x="58" y="918" width="480" height="54" rx="26" ry="26" fill="#EEF3F7" fill-opacity="1.0" stroke="#D7E0E8" stroke-width="1" />
+<circle cx="84" cy="945" r="12" fill="#2A8F9C" fill-opacity="1.0" />
+<text x="114" y="953" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#2A8F9C" text-anchor="start">Open-source GPU software</text>
+<rect x="776" y="918" width="520" height="54" rx="26" ry="26" fill="#EEF3F7" fill-opacity="1.0" stroke="#D7E0E8" stroke-width="1" />
+<circle cx="802" cy="945" r="12" fill="#3B73B9" fill-opacity="1.0" />
+<text x="832" y="953" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#3B73B9" text-anchor="start">Benchmark datasets + reproducible code</text>
+<rect x="1522" y="918" width="240" height="54" rx="26" ry="26" fill="#EEF3F7" fill-opacity="1.0" stroke="#D7E0E8" stroke-width="1" />
+<circle cx="1548" cy="945" r="12" fill="#5E8A67" fill-opacity="1.0" />
+<text x="1578" y="953" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#5E8A67" text-anchor="start">Students + outreach</text>
+</svg>

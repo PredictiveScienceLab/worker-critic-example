@@ -132,3 +132,4 @@ bench_worktrees/
 
 # Autoresearch run logs and per-iteration work products
 artifacts/autoresearch/runs/
+artifacts/autoresearch-proposal/runs/
