@@ -79,6 +79,57 @@ Use a different temp parent if needed:
 uv run python scripts/launch_codex_exec.py base --workspace-root /tmp/my-run-root
 ```
 
+## Claude Code runs
+
+The repo also has a Claude-based harness that keeps session continuity explicitly across review rounds.
+
+Launch an isolated background Claude run with:
+
+```bash
+uv run python scripts/launch_claude_exec.py base
+uv run python scripts/launch_claude_exec.py critic
+uv run python scripts/launch_claude_exec.py external
+```
+
+This launcher:
+
+- creates an isolated temp repo under `/tmp/worker-critic-example-runs/<run-id>/`;
+- renders a run-local `CLAUDE.md` from `run-CLAUDE.md`;
+- starts a tmux-backed runner that uses persistent Claude sessions;
+- keeps one worker session across the whole run;
+- for Condition B, keeps one persistent Claude critic session across review rounds;
+- for Condition C, keeps one persistent worker session and uses `scripts/anthropic_review.py` for the external Foundry reviewer.
+
+The Claude runner is implemented in `scripts/run_claude_condition.py`.
+The Azure Foundry reviewer is implemented in `scripts/anthropic_review.py`.
+The shared review prompt is `prompts/review-master-figure.md`.
+
+Current Foundry note:
+
+- local smoke tests on April 6, 2026 confirmed `claude-opus-4-6` on this endpoint;
+- the explicit Sonnet model names I tried (`claude-sonnet-4-6`, `claude-sonnet-4-5`, and `claude-sonnet-4`) were rejected by the current deployment;
+- so the Claude launcher defaults to `claude-opus-4-6` for the worker and critic unless you override `--worker-model` or `--critic-model`.
+
+Example override:
+
+```bash
+uv run python scripts/launch_claude_exec.py critic \
+  --worker-model claude-opus-4-6 \
+  --critic-model claude-opus-4-6
+```
+
+The external reviewer can be called directly with:
+
+```bash
+uv run python scripts/anthropic_review.py \
+  --proposal inputs/project_description.tex \
+  --svg artifacts/master-figure/master-figure.svg \
+  --history-dir runs/<run-id>/reviews \
+  --output-md artifacts/master-figure-external-review/review.md \
+  --output-json artifacts/master-figure-external-review/review.json \
+  --model claude-opus-4-6
+```
+
 ## Comparison artifacts
 
 After the three runs finish, collect the final figures and build the comparison media with:
