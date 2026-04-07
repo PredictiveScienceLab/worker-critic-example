@@ -6,6 +6,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -17,6 +18,7 @@ TMP_RUNS_DIR = Path("/tmp") / "worker-critic-example-runs"
 RUN_AGENTS_TEMPLATE = REPO_ROOT / "run-AGENTS.md"
 REASONING_EFFORT = "xhigh"
 MODEL = "gpt-5.4"
+FIGMA_FILE_KEY = "dEAATgaM88OTU7As2ywPfb"
 SEED_PATHS = (
     ".python-version",
     ".gitignore",
@@ -94,6 +96,33 @@ def run(cmd: list[str], cwd: Path | None = None) -> str:
 def ensure_tmux_available() -> None:
     if shutil.which("tmux") is None:
         raise RuntimeError("tmux is required but was not found on PATH.")
+
+
+def ensure_figma_preflight() -> None:
+    completed = subprocess.run(
+        [
+            "uv",
+            "run",
+            "python",
+            "scripts/check_figma_mcp.py",
+            "--file-key",
+            FIGMA_FILE_KEY,
+            "--model",
+            MODEL,
+        ],
+        cwd=REPO_ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if completed.returncode == 0:
+        return
+    details = completed.stdout.strip() or completed.stderr.strip() or "Unknown Figma MCP preflight failure."
+    raise RuntimeError(
+        "Figma MCP preflight failed for condition `af`. "
+        "The current Figma account or workspace is not allowing `use_figma` calls.\n"
+        f"{details}"
+    )
 
 
 def make_run_id(condition: str, label: str) -> str:
@@ -258,6 +287,8 @@ def launch_codex_via_tmux(workspace_path: Path, run_root: Path, run_id: str) -> 
 def main() -> None:
     args = parse_args()
     ensure_tmux_available()
+    if args.condition == "af":
+        ensure_figma_preflight()
     condition = CONDITIONS[args.condition]
     run_id = make_run_id(args.condition, args.label)
     workspace_root = Path(args.workspace_root).expanduser()
@@ -301,4 +332,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except RuntimeError as exc:
+        print(str(exc), file=sys.stderr)
+        raise SystemExit(1)

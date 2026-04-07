@@ -50,6 +50,8 @@ Each launch creates an isolated temp workspace under `/tmp/worker-critic-example
 
 `af` is the Figma-native baseline. It uses the shared base prompt plus `prompts/figma-addendum.md`, targets the configured Figma file through the MCP server, and writes local artifacts under `artifacts/master-figure-figma/` inside the temp workspace.
 
+Before `af` launches, the harness now runs `scripts/check_figma_mcp.py` as a one-call Figma preflight. If `use_figma` is blocked by plan limits, rate limits, or permissions, the launcher aborts immediately with the Figma error instead of starting a long run and silently degrading into a non-Figma fallback.
+
 Each run saves:
 
 - the exact prompt sent to Codex;

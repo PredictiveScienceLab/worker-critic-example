@@ -10,6 +10,14 @@ Use the Figma MCP server to inspect the file, create the figure, and export or c
 
 If the `figma-use` and `figma-generate-design` skills are available in the session, load them before any `use_figma` calls. If they are not available, still use the Figma MCP tools directly and follow the same incremental workflow: inspect first, build in small steps, validate after each major change, and keep track of all created node IDs.
 
+Use as few Figma MCP calls as possible. Do not spend calls on exploratory screenshots before you know native editing works. Prefer:
+
+1. one minimal inspection step;
+2. one or more `use_figma` calls to create the figure incrementally;
+3. export or capture only after the frame is in place.
+
+Never use `figma.notify()` inside `use_figma` code.
+
 Do not overwrite or rearrange unrelated existing content in the file. Create one dedicated top-level frame for this condition, name it clearly, and place it away from existing nodes if the page is not empty.
 
 For this condition, override the default output paths and source-of-truth expectation from the base prompt:
@@ -44,3 +52,5 @@ The `notes.md` file should still include:
 - a self-contained caption draft.
 
 Before finishing, verify in Figma that the frame reads clearly at proposal scale, then export or capture the final frame as the required local `PNG`.
+
+If any Figma MCP call returns a tool-limit, rate-limit, plan-limit, paywall, or permission blocker, stop immediately and record that blocker in `artifacts/master-figure-figma/figma.json` and `artifacts/master-figure-figma/notes.md`. Do not silently downgrade this condition into a non-Figma local rendering run.
