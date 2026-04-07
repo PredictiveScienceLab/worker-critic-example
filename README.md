@@ -78,3 +78,21 @@ Use a different temp parent if needed:
 ```bash
 uv run python scripts/launch_codex_exec.py base --workspace-root /tmp/my-run-root
 ```
+
+## Comparison artifacts
+
+After the three runs finish, collect the final figures and build the comparison media with:
+
+```bash
+uv run python scripts/build_comparison_artifacts.py \
+  --run-prefix 20260406-192417 \
+  --output-dir artifacts/20260406-192417-comparison
+```
+
+This copies the final PNGs and notes from the `/tmp` run workspaces into a repo-local directory and generates:
+
+- `final-comparison.png`: labeled side-by-side final figures;
+- `gifs/base-progress.gif`: base-condition draft progression;
+- `gifs/critic-progress.gif`: same-model-critic draft progression;
+- `gifs/external-progress.gif`: external-review draft progression;
+- `summary.md`: source run roots, frame counts, and copied artifact paths.

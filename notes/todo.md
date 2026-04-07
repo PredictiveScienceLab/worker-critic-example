@@ -1,5 +1,5 @@
 2026-04-06
 
-- Decide whether to cap the number of external review iterations or require explicit approval only.
-- Add a lightweight status helper if detached-run monitoring becomes cumbersome.
-- Re-run conditions A, B, and C with the tmux-backed `/tmp` launcher once the single-run tmux smoke test is validated.
+- Extract the benchmark takeaways from the final comparison strip and the review histories for the Substack narrative.
+- Decide which specific frames from the progress GIFs best illustrate “critique forced a meaningful revision” for Conditions B and C.
+- Optionally add a small HTML page that embeds `final-comparison.png` and the three GIFs for faster visual review while drafting the post.

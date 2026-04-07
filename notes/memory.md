@@ -23,3 +23,5 @@
 - Condition C should use one persistent Codex worker session, but the external `gpt-5.4-pro` reviewer should be stateless API calls that receive the current SVG plus prior review history; do not send PNG files to that reviewer.
 - The shared base generation prompt should reflect NSF figure best practices: conceptual-graphic-abstract framing, print-legible typography, strong contrast, innovation/impact emphasis, avoidance of clutter, and a self-contained caption draft in `notes.md`.
 - The original detached launcher is unreliable in this environment for long `codex exec` runs; move detached execution to `tmux`-managed sessions so run lifetimes are not tied to the parent process.
+- Finished benchmark runs may live only under `/tmp`, so post-run comparison artifacts should be copied back into the repo if we want stable assets for the Substack post.
+- Some archived intermediate frames can be invalid because early rasterization failures still wrote placeholder PNGs; the comparison builder should validate frames and skip broken images when assembling GIFs.
