@@ -12,3 +12,4 @@
 - Let the proposal autoresearch run finish, then compare its best proposal figure and scores against the current proposal baseline of `6.50 / 10`.
 - If proposal autoresearch converges, decide whether to promote `proposal_autoresearch/plot.py` and the final `artifacts/autoresearch-proposal/current/` outputs into the main proposal benchmark assets.
 - Compare the retry run with hard word-size constraints against the first proposal autoresearch run to see whether stricter figure discipline beats the earlier `8.20` local optimum.
+- Verify that the refreshed proposal autoresearch launcher remains stable now that reviewer timeouts are bounded and that a fresh run can move past the baseline-refresh stage without manual intervention.

@@ -33,6 +33,8 @@ MODEL = "gpt-5.4"
 REASONING_EFFORT = "xhigh"
 PASS_AVERAGE = 8.5
 PASS_MIN = 8.0
+REVIEW_TIMEOUT_SECONDS = 1200
+REVIEW_MAX_ATTEMPTS = 2
 
 
 @dataclass(frozen=True)
@@ -101,6 +103,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=MODEL, help="Codex model for the reviewer.")
     parser.add_argument("--reasoning-effort", default=REASONING_EFFORT, help="Reviewer reasoning effort.")
     parser.add_argument("--skip-render", action="store_true", help="Do not rerun plot.py before evaluation.")
+    parser.add_argument(
+        "--review-timeout-seconds",
+        type=int,
+        default=REVIEW_TIMEOUT_SECONDS,
+        help="Hard timeout for a single Codex review call.",
+    )
+    parser.add_argument(
+        "--review-max-attempts",
+        type=int,
+        default=REVIEW_MAX_ATTEMPTS,
+        help="How many times to retry the Codex review before failing.",
+    )
     return parser.parse_args()
 
 
@@ -253,32 +267,60 @@ Return this exact schema:
 """.strip()
 
 
-def run_codex_review(prompt: str, model: str, reasoning_effort: str) -> str:
+def run_codex_review(
+    prompt: str,
+    model: str,
+    reasoning_effort: str,
+    timeout_seconds: int,
+    max_attempts: int,
+) -> str:
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
-    completed = subprocess.run(
-        [
-            "codex",
-            "exec",
-            "-m",
-            model,
-            "-c",
-            f'model_reasoning_effort="{reasoning_effort}"',
-            "-o",
-            str(RAW_REVIEW_PATH),
-            "-",
-        ],
-        cwd=REPO_ROOT,
-        input=prompt,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    if completed.returncode != 0:
-        raise RuntimeError(
-            "Codex review failed.\n"
+    failures: list[str] = []
+    for attempt in range(1, max_attempts + 1):
+        RAW_REVIEW_PATH.unlink(missing_ok=True)
+        try:
+            completed = subprocess.run(
+                [
+                    "codex",
+                    "exec",
+                    "-m",
+                    model,
+                    "-c",
+                    f'model_reasoning_effort="{reasoning_effort}"',
+                    "-o",
+                    str(RAW_REVIEW_PATH),
+                    "-",
+                ],
+                cwd=REPO_ROOT,
+                input=prompt,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=timeout_seconds,
+            )
+        except subprocess.TimeoutExpired as exc:
+            stdout = exc.stdout or ""
+            stderr = exc.stderr or ""
+            failures.append(
+                "Attempt "
+                f"{attempt} timed out after {timeout_seconds} seconds.\n"
+                f"stdout:\n{stdout}\n\nstderr:\n{stderr}"
+            )
+            continue
+
+        if completed.returncode == 0 and RAW_REVIEW_PATH.exists():
+            return RAW_REVIEW_PATH.read_text(encoding="utf-8")
+
+        failures.append(
+            "Attempt "
+            f"{attempt} failed with exit code {completed.returncode}.\n"
             f"stdout:\n{completed.stdout}\n\nstderr:\n{completed.stderr}"
         )
-    return RAW_REVIEW_PATH.read_text(encoding="utf-8")
+
+    raise RuntimeError(
+        "Codex review failed after "
+        f"{max_attempts} attempt(s).\n\n" + "\n\n".join(failures)
+    )
 
 
 def extract_json(text: str) -> dict[str, object]:
@@ -353,7 +395,15 @@ def main() -> None:
 
     svg_facts = collect_svg_facts(SVG_PATH)
     prompt = build_prompt(svg_facts)
-    payload = extract_json(run_codex_review(prompt, args.model, args.reasoning_effort))
+    payload = extract_json(
+        run_codex_review(
+            prompt,
+            args.model,
+            args.reasoning_effort,
+            args.review_timeout_seconds,
+            args.review_max_attempts,
+        )
+    )
     scores = validate_scores(payload)
     average_score = statistics.mean(scores.values())
     accepted = average_score >= PASS_AVERAGE and min(scores.values()) >= PASS_MIN
