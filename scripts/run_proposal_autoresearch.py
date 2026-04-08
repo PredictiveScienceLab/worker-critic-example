@@ -188,6 +188,12 @@ Improve `proposal_autoresearch/plot.py` so the fixed evaluator in `proposal_auto
 - Use `uv run python proposal_autoresearch/plot.py` to render locally when needed.
 - Do not run or modify your own reviewer. The outer loop will evaluate the result.
 - Keep changes focused on the proposal master figure, not on surrounding repo infrastructure.
+- Treat this as a master figure, not a poster, not a slide, and not a checklist.
+- Keep one dominant scaffold: left inputs/problem, center reconstruction engine + posterior, right evidence/impact.
+- Outside the title, keep visible text to about 90 words or fewer.
+- Do not use body text smaller than 18 px.
+- Do not use paragraph text in the aim strip.
+- Make the center hero visually depict fused reconstruction, not just name the method.
 
 ## Workspace
 
@@ -268,6 +274,8 @@ Task:
 - prioritize the reviewer feedback, especially the weakest criterion
 - keep the figure as one wide proposal master figure that lands in one glance
 - reduce clutter before adding detail
+- enforce the hard constraints from `proposal_autoresearch/program.md`
+- optimize readability and print-scale legibility once fidelity and coverage are preserved
 - you may run `uv run python proposal_autoresearch/plot.py` to inspect your changes
 
 Do not:

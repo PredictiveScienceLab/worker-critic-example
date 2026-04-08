@@ -172,36 +172,41 @@ def arrow(svg: SVG, x1: int, y1: int, x2: int, y2: int, *, color: str, width: in
 
 def modality_card(svg: SVG, x: int, y: int, width: int, height: int, *, title: str, body: str, accent: str, icon_label: str) -> None:
     svg.rect(x, y, width, height, fill="#FFFFFF", radius=26, stroke=accent, stroke_width=2)
-    svg.circle(x + 48, y + 42, 24, fill=rgba(accent, 0.14), stroke=rgba(accent, 0.45), stroke_width=2)
-    svg.circle(x + 48, y + 42, 14, fill="#FFFFFF", stroke=rgba(accent, 0.65), stroke_width=2)
-    svg.text(icon_label, x + 48, y + 49, font_size=18, fill=accent, weight=800, align="middle")
-    svg.text(title, x + 92, y + 42, font_size=28, fill="#243B53", weight=800)
-    svg.text(body, x + 92, y + 78, font_size=18, fill="#52667A", max_width=width - 120, line_height=24)
+    svg.circle(x + 44, y + 38, 22, fill=rgba(accent, 0.14), stroke=rgba(accent, 0.45), stroke_width=2)
+    svg.circle(x + 44, y + 38, 13, fill="#FFFFFF", stroke=rgba(accent, 0.65), stroke_width=2)
+    svg.text(icon_label, x + 44, y + 44, font_size=16, fill=accent, weight=800, align="middle")
+    svg.text(title, x + 82, y + 40, font_size=23, fill="#243B53", weight=800)
+    svg.text(body, x + 82, y + 70, font_size=16, fill="#52667A", max_width=width - 108, line_height=19)
 
 
 def feature_box(svg: SVG, x: int, y: int, width: int, height: int, *, title: str, lines: list[str], accent: str, fill: str) -> None:
     svg.rect(x, y, width, height, fill=fill, radius=22, stroke=accent, stroke_width=2)
     svg.rect(x + 18, y + 18, 8, height - 36, fill=accent, radius=4)
-    svg.text(title, x + 44, y + 38, font_size=23, fill="#243B53", weight=800)
-    cursor_y = y + 74
+    title_lines = wrap_lines(title, width - 68, 19)
+    title_y = y + 36
+    for index, line in enumerate(title_lines):
+        svg.text(line, x + 44, title_y + index * 22, font_size=19, fill="#243B53", weight=800)
+    cursor_y = y + 48 + len(title_lines) * 22
     for line in lines:
-        svg.text(line, x + 44, cursor_y, font_size=17, fill="#425466", max_width=width - 64, line_height=22)
-        cursor_y += 32
+        for wrapped_line in wrap_lines(line, width - 68, 15):
+            svg.text(wrapped_line, x + 44, cursor_y, font_size=15, fill="#425466", max_width=width - 68, line_height=18)
+            cursor_y += 18
+        cursor_y += 5
 
 
 def aim_card(svg: SVG, x: int, y: int, width: int, height: int, *, number: int, title: str, body: str, accent: str, fill: str) -> None:
     svg.rect(x, y, width, height, fill=fill, radius=24, stroke=accent, stroke_width=2)
-    svg.circle(x + 34, y + 34, 20, fill=accent)
-    svg.text(str(number), x + 34, y + 42, font_size=20, fill="#FFFFFF", weight=800, align="middle")
-    svg.text(title, x + 66, y + 34, font_size=19, fill=accent, weight=800)
-    svg.text(body, x + 28, y + 74, font_size=16, fill="#4B5D6E", max_width=width - 56, line_height=22)
+    svg.circle(x + 32, y + 32, 18, fill=accent)
+    svg.text(str(number), x + 32, y + 39, font_size=18, fill="#FFFFFF", weight=800, align="middle")
+    svg.text(title, x + 60, y + 34, font_size=18, fill=accent, weight=800, max_width=width - 80)
+    svg.text(body, x + 24, y + 68, font_size=14, fill="#4B5D6E", max_width=width - 48, line_height=18)
 
 
 def evidence_box(svg: SVG, x: int, y: int, width: int, height: int, *, title: str, body: str, accent: str, icon: str) -> None:
     svg.rect(x, y, width, height, fill="#FFFFFF", radius=22, stroke=accent, stroke_width=2)
-    svg.text(icon, x + 30, y + 44, font_size=26, fill=accent, weight=800, align="middle")
-    svg.text(title, x + 58, y + 38, font_size=24, fill=accent, weight=800)
-    svg.text(body, x + 58, y + 72, font_size=17, fill="#4B5D6E", max_width=width - 84, line_height=23)
+    svg.text(icon, x + 28, y + 42, font_size=24, fill=accent, weight=800, align="middle")
+    svg.text(title, x + 54, y + 36, font_size=22, fill=accent, weight=800)
+    svg.text(body, x + 54, y + 66, font_size=16, fill="#4B5D6E", max_width=width - 78, line_height=20)
 
 
 def footer_chip(svg: SVG, x: int, y: int, width: int, label: str, accent: str) -> None:
@@ -210,43 +215,129 @@ def footer_chip(svg: SVG, x: int, y: int, width: int, label: str, accent: str) -
     svg.text(label, x + 56, y + 35, font_size=18, fill=accent, weight=800)
 
 
+def tag_chip(
+    svg: SVG,
+    x: float,
+    y: float,
+    width: float,
+    label: str,
+    *,
+    accent: str,
+    fill: str | None = None,
+    font_size: int = 13,
+) -> None:
+    chip_fill = fill or rgba(accent, 0.10)
+    svg.rect(x, y, width, 30, fill=chip_fill, radius=15, stroke=rgba(accent, 0.26), stroke_width=1)
+    svg.circle(x + 16, y + 15, 5, fill=accent)
+    svg.text(label, x + 30, y + 20, font_size=font_size, fill=accent, weight=820, max_width=int(width - 34))
+
+
+def engine_strip(svg: SVG, x: int, y: int, width: int, height: int) -> None:
+    svg.rect(x, y, width, height, fill="#FFF9F0", radius=24, stroke="#E7DCC8", stroke_width=1.5)
+    cells = [
+        ("Physics priors", "Eikonal geometry and Navier-Stokes-informed fields", "#5B8FD1"),
+        ("Measurement operators", "PC-MRI, 4D Flow MRI, Echo, plus co-registration", "#4D9AA7"),
+        ("Posterior inference", "Persistent SGLD and amortized VI at GPU scale", "#D59A39"),
+    ]
+    cell_width = width / len(cells)
+    for index, (title, body, accent) in enumerate(cells):
+        cell_x = x + index * cell_width
+        if index:
+            svg.line(cell_x, y + 18, cell_x, y + height - 18, stroke="#E3E7EB", stroke_width=1.2)
+        svg.rect(cell_x + 20, y + 18, 72, 6, fill=accent, radius=3)
+        svg.text(title, cell_x + 20, y + 50, font_size=21, fill="#243B53", weight=820, max_width=int(cell_width - 40), line_height=22)
+        svg.text(body, cell_x + 20, y + 82, font_size=15, fill="#52667A", max_width=int(cell_width - 40), line_height=20)
+
+
+def aim_band(svg: SVG, x: int, y: int, width: int, height: int) -> None:
+    svg.rect(x, y, width, height, fill="#FFFFFF", radius=26, stroke="#DDE5EC", stroke_width=1.5)
+    aims = [
+        ("Formulate reconstruction", "Priors, operators, co-registration", "#4F8BD0", "#F4F9FF"),
+        ("Parameterize dynamics", "Time-evolving fields", "#4D9AA7", "#F2FBFA"),
+        ("Scale posterior inference", "Persistent SGLD + amortized VI", "#D59A39", "#FFF8EE"),
+        ("Verify, validate, demonstrate", "Synthetic, in vitro, clinical data", "#6F9A70", "#F3FAF2"),
+    ]
+    cell_width = width / len(aims)
+    for index, (title, body, accent, fill) in enumerate(aims, start=1):
+        cell_x = x + (index - 1) * cell_width
+        if index > 1:
+            svg.line(cell_x, y + 18, cell_x, y + height - 18, stroke="#E3E7EB", stroke_width=1.2)
+        svg.rect(cell_x + 10, y + 10, cell_width - 20, height - 20, fill=fill, radius=18)
+        svg.circle(cell_x + 32, y + 30, 13, fill=accent)
+        svg.text(str(index), cell_x + 32, y + 35, font_size=13, fill="#FFFFFF", weight=820, align="middle")
+        svg.text(f"Specific Aim {index}", cell_x + 52, y + 27, font_size=12, fill=accent, weight=820)
+        svg.text(title, cell_x + 22, y + 60, font_size=16, fill="#243B53", weight=820, max_width=int(cell_width - 44), line_height=18)
+        svg.text(body, cell_x + 22, y + 94, font_size=13, fill="#52667A", max_width=int(cell_width - 44), line_height=16)
+
+
 def posterior_panel(svg: SVG, x: int, y: int, width: int, height: int) -> None:
     svg.rect(x, y, width, height, fill="#F7FBFD", radius=28, stroke="#D9E6E8", stroke_width=1)
-    band_y = y + height * 0.56
-    band_x0 = x + 60
-    band_x1 = x + width - 120
+    tag_chip(svg, x + 22, y + 20, 122, "Geometry", accent="#4F8BD0", fill="#EEF4FF")
+    tag_chip(svg, x + 156, y + 20, 96, "Flow", accent="#2A8F9C", fill="#ECF9F7")
+    tag_chip(svg, x + 264, y + 20, 112, "Pressure", accent="#D18A21", fill="#FFF5E6")
+    tag_chip(svg, x + 388, y + 20, 132, "Uncertainty", accent="#8E71C8", fill="#F5EEFF")
+
+    upper_path = (
+        f"M {x + 88} {y + 114} C {x + 238} {y + 62}, {x + 402} {y + 150}, {x + 548} {y + 120} "
+        f"S {x + width - 174} {y + 62}, {x + width - 98} {y + 100}"
+    )
+    lower_path = (
+        f"M {x + 94} {y + 154} C {x + 244} {y + 118}, {x + 406} {y + 206}, {x + 554} {y + 166} "
+        f"S {x + width - 180} {y + 112}, {x + width - 104} {y + 144}"
+    )
+    center_path = (
+        f"M {x + 92} {y + 134} C {x + 242} {y + 90}, {x + 404} {y + 180}, {x + 550} {y + 142} "
+        f"S {x + width - 178} {y + 90}, {x + width - 100} {y + 122}"
+    )
+    svg.path(center_path, stroke="#B98EDC", stroke_width=72, opacity=0.17)
+    svg.path(center_path, stroke="#D9EEF4", stroke_width=46, opacity=0.98)
+    svg.path(upper_path, stroke="#5B8FD1", stroke_width=4.5, opacity=0.95)
+    svg.path(lower_path, stroke="#5B8FD1", stroke_width=4.5, opacity=0.95)
     svg.path(
-        f"M {band_x0} {band_y} C {x + 220} {y + 20}, {x + 420} {y + height - 10}, {x + 620} {band_y} "
-        f"S {x + width - 220} {y + 24}, {band_x1} {band_y}",
-        stroke="#BFD9E9",
-        stroke_width=44,
-        opacity=0.9,
+        f"M {x + 90} {y + 96} C {x + 240} {y + 48}, {x + 400} {y + 134}, {x + 548} {y + 106} "
+        f"S {x + width - 170} {y + 50}, {x + width - 94} {y + 88}",
+        stroke="#B98EDC",
+        stroke_width=2.5,
+        opacity=0.55,
     )
     svg.path(
-        f"M {band_x0 + 4} {band_y - 6} C {x + 224} {y + 26}, {x + 428} {y + height - 18}, {x + 624} {band_y - 6} "
-        f"S {x + width - 216} {y + 30}, {band_x1 + 2} {band_y - 6}",
-        stroke="#2A8F9C",
-        stroke_width=16,
+        f"M {x + 98} {y + 172} C {x + 248} {y + 130}, {x + 408} {y + 220}, {x + 556} {y + 182} "
+        f"S {x + width - 184} {y + 126}, {x + width - 108} {y + 160}",
+        stroke="#B98EDC",
+        stroke_width=2.5,
+        opacity=0.55,
     )
+
+    arrow(svg, x + 170, y + 132, x + 294, y + 128, color="#2A8F9C", width=7)
+    arrow(svg, x + 362, y + 144, x + 498, y + 146, color="#2A8F9C", width=7)
+    arrow(svg, x + 564, y + 144, x + 700, y + 126, color="#2A8F9C", width=7)
+
     svg.path(
-        f"M {band_x0 + 22} {band_y + 18} C {x + 232} {y + 64}, {x + 424} {y + height + 10}, {x + 618} {band_y + 18} "
-        f"S {x + width - 200} {y + 54}, {band_x1 + 8} {band_y + 18}",
-        stroke="#CC8A26",
-        stroke_width=9,
+        f"M {x + 148} {y + 176} C {x + 310} {y + 152}, {x + 492} {y + 212}, {x + 660} {y + 182} "
+        f"S {x + width - 168} {y + 132}, {x + width - 110} {y + 150}",
+        stroke="#D18A21",
+        stroke_width=8,
+        opacity=0.92,
     )
-    for px in (band_x0 + 150, band_x0 + 310, band_x0 + 510):
-        svg.circle(px, band_y - 4, 14, fill="#FFFFFF", stroke="#5B8FD1", stroke_width=3)
+    for cx, cy, radius, opacity in [
+        (x + 192, y + 172, 18, 0.24),
+        (x + 386, y + 174, 14, 0.18),
+        (x + 592, y + 160, 11, 0.14),
+    ]:
+        svg.circle(cx, cy, radius, fill=rgba("#D18A21", opacity))
+        svg.circle(cx, cy, radius * 0.54, fill="#FFFFFF", stroke=rgba("#D18A21", 0.55), stroke_width=2)
+
     svg.path(
-        f"M {x + width - 300} {y + 164} C {x + width - 240} {y + 64}, {x + width - 180} {y + 248}, {x + width - 116} {y + 148}",
+        f"M {x + width - 272} {y + 164} C {x + width - 238} {y + 114}, {x + width - 202} {y + 184}, {x + width - 162} {y + 160}",
         stroke="#2D67A3",
-        stroke_width=5,
-        opacity=0.9,
+        stroke_width=4,
+        opacity=0.88,
     )
     svg.path(
-        f"M {x + width - 336} {y + 154} C {x + width - 276} {y + 56}, {x + width - 216} {y + 236}, {x + width - 150} {y + 138}",
+        f"M {x + width - 260} {y + 178} C {x + width - 226} {y + 130}, {x + width - 190} {y + 198}, {x + width - 152} {y + 174}",
         stroke="#7BA8D6",
         stroke_width=3,
-        opacity=0.6,
+        opacity=0.70,
     )
 
 
@@ -261,139 +352,100 @@ def build_figure() -> str:
 
     svg.text(
         "Multimodal Bayesian Reconstruction of Cardiovascular Hemodynamics",
-        58,
-        74,
-        font_size=52,
+        54,
+        68,
+        font_size=44,
         fill="#243B53",
         weight=820,
-        max_width=1560,
-        line_height=58,
+        max_width=1700,
+        line_height=48,
     )
     pill(
         svg,
-        224,
-        94,
-        1330,
-        48,
-        "Goal: recover patient-specific geometry, flow, and pressure from noisy multimodal imaging, with quantified uncertainty.",
+        280,
+        92,
+        1240,
+        42,
+        "Goal: infer patient-specific cardiac structure, flow, and pressure from multimodal imaging with quantified uncertainty.",
         fill="#E9EFF4",
         text_fill="#243B53",
         stroke="#D7E0E8",
-        font_size=17,
+        font_size=16,
     )
 
-    svg.rect(44, 160, 1720, 742, fill="#FFFCF8", radius=34, stroke="#E8DED1", stroke_width=1)
+    svg.rect(44, 150, 1720, 748, fill="#FFFCF8", radius=34, stroke="#E8DED1", stroke_width=1)
 
     # Left panel.
-    svg.rect(62, 206, 382, 550, fill="#FFFFFF", radius=30, stroke="#DDE5EC", stroke_width=1)
-    svg.text("Clinical problem + data", 88, 250, font_size=28, fill="#243B53", weight=820)
+    svg.rect(62, 184, 384, 692, fill="#FFFFFF", radius=30, stroke="#DDE5EC", stroke_width=1)
+    svg.text("Clinical problem + data", 86, 228, font_size=28, fill="#243B53", weight=820)
     svg.text(
-        "Clinically important flow is observed only indirectly and no single modality resolves geometry, pressure, and uncertainty.",
-        88,
-        294,
-        font_size=18,
+        "No single modality resolves cardiac geometry, flow, pressure, and uncertainty on its own.",
+        86,
+        268,
+        font_size=17,
         fill="#5C6E7E",
-        max_width=318,
-        line_height=24,
+        max_width=324,
+        line_height=22,
     )
-    modality_card(svg, 88, 332, 328, 104, title="PC-MRI", body="phase-contrast velocity", accent="#5B8FD1", icon_label="⊂")
-    modality_card(svg, 88, 460, 328, 104, title="4D Flow MRI", body="3D + time, but spatial averaging", accent="#6AA176", icon_label="✳")
-    modality_card(svg, 88, 588, 328, 104, title="Color Doppler Echo", body="fast, low cost, line-of-sight velocity", accent="#D47A66", icon_label="≋")
-    svg.rect(88, 714, 328, 122, fill="#FFF5F1", radius=24, stroke="#E3B7AA", stroke_width=2)
-    svg.text("Why the inverse problem is hard", 106, 752, font_size=22, fill="#C76652", weight=820)
+    modality_card(svg, 86, 316, 332, 108, title="PC-MRI", body="phase-contrast velocity", accent="#5B8FD1", icon_label="P")
+    modality_card(svg, 86, 438, 332, 108, title="4D Flow MRI", body="3D + time, but spatially averaged", accent="#6AA176", icon_label="4")
+    modality_card(svg, 86, 560, 332, 108, title="Color Doppler Echo", body="fast, low-cost line-of-sight velocity", accent="#D47A66", icon_label="E")
+    svg.rect(86, 694, 332, 146, fill="#FFF5F1", radius=24, stroke="#E3B7AA", stroke_width=2)
+    svg.text("Why the inverse problem is hard", 106, 732, font_size=21, fill="#C76652", weight=820)
     svg.text(
-        "Noise, spatial averaging, unknown geometry, boundary / initial conditions, and modality misalignment make the inverse problem ill-posed.",
+        "Noise, spatial averaging, unknown geometry, boundary conditions, and modality misalignment make inference ill-posed.",
         106,
-        790,
+        770,
         font_size=17,
         fill="#6A4A42",
-        max_width=292,
+        max_width=296,
         line_height=22,
     )
 
     # Center panel.
-    svg.rect(470, 186, 880, 612, fill="#FFFDF9", radius=30, stroke="#E8D7B5", stroke_width=2)
-    svg.text("New engine: Information Field Theory (IFT)", 500, 250, font_size=28, fill="#243B53", weight=820)
-    pill(svg, 1044, 214, 268, 40, "NEW: no repeated CFD solves", fill="#FFF3DE", text_fill="#C88820", stroke="#E8C17E", font_size=16)
+    svg.rect(462, 184, 886, 692, fill="#FFFDF9", radius=30, stroke="#E8D7B5", stroke_width=2)
+    svg.text("Information Field Theory engine", 490, 228, font_size=29, fill="#243B53", weight=820)
+    pill(svg, 1098, 196, 214, 36, "No repeated CFD solves", fill="#FFF3DE", text_fill="#C88820", stroke="#E8C17E", font_size=15)
     svg.text(
-        "IFT combines measurement models and PDE-informed priors into one Bayesian reconstruction over fields, parameters, and uncertainty.",
-        500,
-        292,
+        "IFT fuses modality-specific measurement operators and physics-informed priors into one Bayesian posterior over time-evolving cardiovascular fields.",
+        490,
+        268,
         font_size=18,
         fill="#5C6E7E",
-        max_width=800,
+        max_width=790,
         line_height=24,
     )
-    svg.text("Posterior Hamiltonian = data Hamiltonian + prior Hamiltonian", 500, 332, font_size=17, fill="#C88820", weight=820)
-
-    feature_box(
-        svg,
-        500,
-        366,
-        252,
-        138,
-        title="Physics-informed priors",
-        lines=["Eikonal geometry", "Continuity + Navier-Stokes", "beta for model-form error"],
-        accent="#5B8FD1",
-        fill="#F5FAFF",
-    )
-    feature_box(
-        svg,
-        774,
-        366,
-        252,
-        138,
-        title="Measurement models",
-        lines=["PC-MRI, 4D Flow, Echo", "modality-specific operators", "Bayesian co-registration"],
-        accent="#4D9AA7",
-        fill="#F2FBFA",
-    )
-    feature_box(
-        svg,
-        1048,
-        366,
-        252,
-        138,
-        title="Scalable inference",
-        lines=["persistent SGLD", "amortized VI", "data-parallel GPU batches"],
-        accent="#D59A39",
-        fill="#FFF8EE",
-    )
-
-    posterior_panel(svg, 500, 526, 800, 148)
-    pill(svg, 1132, 528, 132, 30, "posterior output", fill="#EEF2F8", text_fill="#243B53", stroke="#D7E0E8", font_size=15)
-    pill(svg, 1090, 590, 130, 30, "ill-posed problems", fill="#EAF4E9", text_fill="#5E8A67", stroke="#B9D7BB", font_size=15)
-    pill(svg, 1078, 632, 150, 30, "uncertainty-aware", fill="#F2E9FF", text_fill="#7E48B3", stroke="#D9C6F6", font_size=15)
-    svg.text("geometry g(x,t), velocity v(x,t),", 1246, 576, font_size=15, fill="#5C6E7E")
-    svg.text("pressure p(x,t), motion, uncertainty", 1246, 602, font_size=15, fill="#5C6E7E")
-
-    aim_y = 708
-    aim_card(svg, 500, aim_y, 186, 120, number=1, title="AIM 1", body="Priors, measurement operators, and co-registration.", accent="#4F8BD0", fill="#F4F9FF")
-    aim_card(svg, 700, aim_y, 186, 120, number=2, title="AIM 2", body="Boundary-aware fields plus causal / Markovian dynamics.", accent="#4D9AA7", fill="#F2FBFA")
-    aim_card(svg, 900, aim_y, 186, 120, number=3, title="AIM 3", body="Persistent SGLD + amortized VI for scalable joint inference.", accent="#D59A39", fill="#FFF8EE")
-    aim_card(svg, 1100, aim_y, 200, 120, number=4, title="AIM 4", body="Synthetic verification, in vitro validation, and clinical demonstration.", accent="#6F9A70", fill="#F3FAF2")
+    svg.rect(490, 300, 378, 38, fill="#FFF5E2", radius=19, stroke="#E8C17E", stroke_width=1.5)
+    svg.text("Posterior = measurement fit + physics prior", 514, 324, font_size=16, fill="#C88820", weight=820)
+    engine_strip(svg, 490, 352, 820, 110)
+    svg.text("Joint posterior fields", 490, 490, font_size=18, fill="#243B53", weight=820)
+    posterior_panel(svg, 490, 506, 820, 206)
+    svg.text("Specific aims", 490, 734, font_size=18, fill="#243B53", weight=820)
+    aim_band(svg, 490, 744, 820, 120)
 
     # Right panel.
-    svg.rect(1380, 206, 336, 550, fill="#FFFFFF", radius=30, stroke="#DDE5EC", stroke_width=1)
-    svg.text("Validation path + impact", 1406, 250, font_size=28, fill="#243B53", weight=820)
-    svg.text("Synthetic truth -> phantoms -> clinical cohorts.", 1406, 294, font_size=18, fill="#5C6E7E", max_width=282, line_height=24)
-    svg.rect(1408, 334, 280, 86, fill="#F4F8FC", radius=22, stroke="#D7E0E8", stroke_width=2)
-    svg.text("Decision-relevant outputs", 1432, 370, font_size=21, fill="#243B53", weight=820)
-    svg.text("velocity / pressure fields,", 1432, 402, font_size=16, fill="#5C6E7E")
-    svg.text("confidence bounds, image analysis", 1432, 424, font_size=16, fill="#5C6E7E")
+    svg.rect(1370, 184, 346, 692, fill="#FFFFFF", radius=30, stroke="#DDE5EC", stroke_width=1)
+    svg.text("Evidence path + impact", 1396, 228, font_size=27, fill="#243B53", weight=820)
+    svg.text("Synthetic truth -> in vitro benchmarks -> clinical data.", 1396, 268, font_size=17, fill="#5C6E7E", max_width=292, line_height=22)
+    svg.rect(1398, 314, 290, 108, fill="#F4F8FC", radius=22, stroke="#D7E0E8", stroke_width=2)
+    svg.text("Decision-relevant outputs", 1422, 348, font_size=20, fill="#243B53", weight=820)
+    tag_chip(svg, 1420, 364, 110, "Geometry", accent="#4F8BD0", fill="#EEF4FF")
+    tag_chip(svg, 1542, 364, 86, "Flow", accent="#2A8F9C", fill="#ECF9F7")
+    tag_chip(svg, 1420, 396, 108, "Pressure", accent="#D18A21", fill="#FFF5E6")
+    tag_chip(svg, 1542, 396, 118, "Uncertainty", accent="#8E71C8", fill="#F5EEFF")
 
-    evidence_box(svg, 1412, 446, 272, 104, title="Verification", body="Synthetic 4D Flow + Echo against known truth", accent="#5B8FD1", icon="✓")
-    evidence_box(svg, 1412, 572, 272, 104, title="Validation", body="MRI / Echo phantoms benchmarked with PIV/PTV", accent="#6AA176", icon="∿")
-    evidence_box(svg, 1412, 698, 272, 104, title="Demonstration", body="Clinical cohorts for risk and model comparison", accent="#D47A66", icon="+")
-    arrow(svg, 1548, 550, 1548, 570, color="#4D9AA7", width=8)
-    arrow(svg, 1548, 676, 1548, 696, color="#4D9AA7", width=8)
+    evidence_box(svg, 1400, 442, 286, 92, title="Verification", body="Synthetic 4D Flow + Echo with ground truth", accent="#5B8FD1", icon="✓")
+    evidence_box(svg, 1400, 550, 286, 92, title="Validation", body="In vitro MRI / Echo phantoms with PIV/PTV", accent="#6AA176", icon="∿")
+    evidence_box(svg, 1400, 658, 286, 92, title="Demonstration", body="Clinical datasets across heart conditions", accent="#D47A66", icon="+")
+    arrow(svg, 1542, 536, 1542, 548, color="#4D9AA7", width=7)
+    arrow(svg, 1542, 644, 1542, 656, color="#4D9AA7", width=7)
 
-    svg.rect(1408, 824, 280, 76, fill="#FFF7E8", radius=22, stroke="#E8C17E", stroke_width=2)
-    svg.text("Intended impact", 1432, 856, font_size=22, fill="#C88820", weight=820)
-    svg.text("More reliable cardiovascular image interpretation", 1432, 884, font_size=15, fill="#6A5A41", max_width=238, line_height=20)
+    svg.rect(1400, 776, 286, 86, fill="#FFF7E8", radius=22, stroke="#E8C17E", stroke_width=2)
+    svg.text("Intended impact", 1424, 822, font_size=21, fill="#C88820", weight=820)
+    svg.text("More reliable cardiovascular image interpretation", 1424, 844, font_size=15, fill="#6A5A41", max_width=244, line_height=19)
 
-    arrow(svg, 420, 534, 470, 534, color="#C5DCE8", width=10)
-    svg.text("co-register\n+ fuse", 444, 508, font_size=18, fill="#2A8F9C", weight=800, align="middle", line_height=22)
+    arrow(svg, 420, 510, 462, 510, color="#C5DCE8", width=9)
+    arrow(svg, 1348, 596, 1370, 596, color="#C5DCE8", width=9)
 
     footer_chip(svg, 58, 918, 480, "Open-source GPU software", accent="#2A8F9C")
     footer_chip(svg, 776, 918, 520, "Benchmark datasets + reproducible code", accent="#3B73B9")

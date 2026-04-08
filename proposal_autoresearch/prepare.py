@@ -108,16 +108,67 @@ def render_figure() -> None:
     subprocess.run([sys.executable, str(PLOT_PATH)], cwd=REPO_ROOT, check=True)
 
 
+def local_name(tag: str) -> str:
+    return tag.rsplit("}", 1)[-1]
+
+
+def parse_font_size(raw: str | None) -> float | None:
+    if raw is None:
+        return None
+    match = re.search(r"([0-9]+(?:\.[0-9]+)?)", raw)
+    return float(match.group(1)) if match else None
+
+
+def extract_text_entries(root: ET.Element) -> list[dict[str, object]]:
+    entries: list[dict[str, object]] = []
+    for element in root.iter():
+        if local_name(element.tag) != "text":
+            continue
+        text_content = " ".join(part.strip() for part in element.itertext() if part.strip())
+        if not text_content:
+            continue
+        tspan_children = [child for child in element if local_name(child.tag) == "tspan"]
+        entries.append(
+            {
+                "text": text_content,
+                "font_size": parse_font_size(element.attrib.get("font-size")),
+                "line_count": len(tspan_children) if tspan_children else 1,
+                "word_count": len(re.findall(r"[A-Za-z0-9][A-Za-z0-9+./-]*", text_content)),
+            }
+        )
+    return entries
+
+
 def collect_svg_facts(svg_path: Path) -> dict[str, object]:
     tree = ET.parse(svg_path)
     root = tree.getroot()
     svg_text = svg_path.read_text(encoding="utf-8")
     lower = svg_text.lower()
     aim_count = len(re.findall(r"aim\s*[1-4]", lower))
+    text_entries = extract_text_entries(root)
+    title_index = -1
+    title_font_size = 0.0
+    for index, entry in enumerate(text_entries):
+        size = entry["font_size"]
+        if isinstance(size, float) and size > title_font_size:
+            title_index = index
+            title_font_size = size
+    body_entries = [entry for index, entry in enumerate(text_entries) if index != title_index]
+    body_font_sizes = [float(entry["font_size"]) for entry in body_entries if isinstance(entry["font_size"], float)]
+    body_word_count = sum(int(entry["word_count"]) for entry in body_entries)
+    small_body_entries = [entry for entry in body_entries if isinstance(entry["font_size"], float) and float(entry["font_size"]) < 18.0]
+    long_body_entries = [entry for entry in body_entries if int(entry["line_count"]) > 3]
     return {
         "svg_width": root.attrib.get("width"),
         "svg_height": root.attrib.get("height"),
         "svg_text_nodes": len(re.findall(r"<text\\b", svg_text)),
+        "body_visible_word_count": body_word_count,
+        "body_word_budget_ok": body_word_count <= 90,
+        "min_non_title_font_size": min(body_font_sizes) if body_font_sizes else None,
+        "small_non_title_text_nodes": len(small_body_entries),
+        "small_non_title_word_count": sum(int(entry["word_count"]) for entry in small_body_entries),
+        "max_non_title_line_count": max((int(entry["line_count"]) for entry in body_entries), default=0),
+        "long_non_title_text_blocks": len(long_body_entries),
         "contains_pc_mri": "pc-mri" in lower or "pc mri" in lower,
         "contains_4d_flow_mri": "4d flow" in lower,
         "contains_echo": "echo" in lower or "doppler" in lower,
@@ -160,6 +211,14 @@ Proposal facts that must remain true:
 - The four aims are: formulation of the inverse problem; parameterization of time-evolving fields; scalable joint-posterior algorithms; and verification / validation / demonstration.
 - The figure should foreground uncertainty-aware geometry, flow, and pressure reconstruction plus the evidence path from synthetic to in vitro to clinical data.
 
+Hard figure requirements:
+- This is a master figure, not a poster, not a slide, and not a checklist.
+- Outside the main title, the figure should use about 90 visible words or fewer.
+- No non-title text smaller than 18 px at the 1800x1020 export size.
+- Avoid text blocks longer than 3 lines inside compact cards.
+- The aim strip should use labels or one very short line, not paragraph text.
+- The center hero should visually depict fused posterior reconstruction, not just name the method.
+
 Scoring criteria (0 to 10, where 10 is best):
 {criteria_block}
 
@@ -172,6 +231,10 @@ Instructions:
 - Be conservative. Scores of 9-10 should be rare.
 - Use the scoring guidance literally.
 - If a cap condition applies, do not score above that cap.
+- If `body_word_budget_ok` is false, do not score `one_glance_clarity` or `readability_layout` above 7.
+- If `min_non_title_font_size` is below 18 or `small_non_title_text_nodes` is nonzero, do not score `readability_layout` above 6.
+- If `long_non_title_text_blocks` is nonzero or `max_non_title_line_count` exceeds 3, do not score `readability_layout` above 7.
+- If the center still reads mostly as labeled method boxes rather than a visible fused reconstruction, do not score `one_glance_clarity` above 8.
 - Prefer reviewer utility over decorative taste.
 - Return only valid JSON, with no markdown fences and no extra commentary.
 

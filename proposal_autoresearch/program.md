@@ -44,6 +44,27 @@ The ideal figure is:
 - legible at proposal-print scale;
 - visually coherent without becoming a dense infographic board.
 
+This is a master figure, not a poster, not a slide, and not a checklist.
+
+## Planning requirement
+
+Before you change the drawing logic, decide these two things inside `proposal_autoresearch/plot.py`:
+
+1. one sentence for the five-second takeaway;
+2. the five visual elements that must remain in the figure.
+
+These planning aids do not need to be rendered, but they should guide the layout.
+
+## Hard design constraints
+
+- Outside the main title, use no more than about `90` visible words.
+- Do not use paragraph text in the aim strip. Aim cards should be labels or one very short line.
+- The center hero must visually depict fused posterior reconstruction, not just name the method.
+- No non-title text smaller than `18 px` at the exported `1800x1020` size.
+- Avoid text blocks longer than `3` lines inside compact cards.
+- If an element does not improve five-second comprehension, remove it.
+- Keep one dominant scaffold: left inputs/problem, center reconstruction engine + posterior, right evidence/impact.
+
 ## Workflow
 
 1. Edit `proposal_autoresearch/plot.py`.
@@ -60,3 +81,4 @@ The ideal figure is:
 - Do not add extra files unless they are outputs inside `artifacts/autoresearch-proposal/current/`.
 - Prefer clearer structure over more wording.
 - Prefer proposal fidelity over decorative novelty.
+- Treat layout/readability as the main optimization target once fidelity and coverage are preserved.
